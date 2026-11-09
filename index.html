@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Zerfallslabor · Physik 10</title>
+<script src="lib/jspdf.umd.min.js" defer></script>
 <style>
 /* Hintergrundbilder in bilder/: KI-erzeugt (ChatGPT über Codex), rein dekorativ und stilisiert – keine physikalische Darstellung. */
 :root{
@@ -151,6 +152,12 @@ body.lehrkraft .loesung{display:block}
 .merk{margin-top:1.4rem;border-radius:20px;padding:1rem 1.2rem;background:rgba(255,90,110,.07);border:1px solid rgba(255,90,110,.35)}
 .merk h3{font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:#ff8fa0;margin-bottom:.4rem}
 .merk p{color:#e4e7fb}
+.export{margin-top:1.6rem;border-radius:20px;padding:1.1rem 1.2rem;background:linear-gradient(180deg,rgba(255,181,71,.12),rgba(255,181,71,.04));border:1px solid rgba(255,181,71,.45)}
+.export h3{font-size:1.2rem;margin-bottom:.3rem}
+.export p{color:#dde2fb;margin-bottom:.8rem}
+.exportreihe{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.exportreihe input{font:inherit;flex:1 1 220px;border-radius:14px;border:1px solid var(--rand);background:rgba(0,0,0,.25);color:var(--text);padding:.75rem .9rem}
+.exportreihe input:focus{outline:2px solid var(--amber);border-color:transparent}
 footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -159,7 +166,7 @@ footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
 <div class="wrap">
 
 <header class="held">
-  <span class="marke">⚛ Physik 10 · Radioaktivität · Version 2</span>
+  <span class="marke">⚛ Physik 10 · Radioaktivität</span>
   <h1>Das Zerfallslabor</h1>
   <p>Wann zerfällt ein Atomkern? Niemand weiß es — es ist reiner Zufall. Und trotzdem folgen viele Kerne zusammen einem genauen Gesetz. Und wovon hängt es ab, ob ein Stoff stark oder schwach strahlt?</p>
   <div class="chips"><span>50 bis 5 000 Atome</span><span>Halbwertszeit 1 s bis 10 s</span><span>Strahlermeter: stark · mittel · schwach</span><span>Kurve live: N(t) = N₀ · e<sup>−λt</sup></span></div>
@@ -268,6 +275,11 @@ footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
   <div class="fortschritt"><span id="fText">0 von 8 erledigt</span><div class="balken"><div id="fBalken"></div></div></div>
   <div class="karten" id="karten"></div>
   <div class="merk loesung" style="display:none" id="merkL"></div>
+  <div class="export">
+    <h3>📄 Ergebnisse als PDF</h3>
+    <p>Das PDF enthält eine kurze Erklärung, eine Infografik zur Halbwertszeit, deine Antworten und dein Messprotokoll. Füge es in GoodNotes zu deinen Notizen hinzu.</p>
+    <div class="exportreihe"><input id="name" type="text" placeholder="Dein Name" autocomplete="off"><button class="knopf" id="pdf">PDF erzeugen</button><button class="knopf zweit klein" id="pdfLeer">Leere Vorlage zum Drucken</button></div>
+  </div>
 </section>
 
 <footer>Physik 10 · Paul-Klee-Gymnasium Overath · Die Zerfälle werden zufällig ausgelost — wie in der Natur. Grenzen im Strahlermeter: stark ab 175 Bq, schwach unter 40 Bq (für dieses Labor festgelegt). Hintergrundbilder KI-erzeugt und stilisiert.</footer>
@@ -661,6 +673,143 @@ if(new URLSearchParams(location.search).has("loesungen")){
   const m = $("merkL"); m.style.display="block";
   m.innerHTML = `<h3>Merksatz (Lehrkraft)</h3><p>Ein Stoff strahlt stark, wenn er sehr viele radioaktive Kerne enthält oder Kerne mit kurzer Halbwertszeit. Bei vielen Kernen mit langer Halbwertszeit nimmt die Strahlung nur langsam ab. Bei kurzer Halbwertszeit wird aus dem starken Strahler schnell ein schwacher.</p>`;
 }
+
+// ---------- PDF-Export: Erklärung, Infografik, Antworten, Protokoll ----------
+const PW = 1240, PH = 1754, RAND = 90, BREIT = PW - 2*RAND;   // A4 bei 150 dpi
+const SCHRIFT = '-apple-system,"Helvetica Neue",Helvetica,Arial,sans-serif';
+try{ $("name").value = localStorage.getItem("zerfallslabor-name") || ""; }catch(e){}
+$("name").addEventListener("input", ()=>{ try{ localStorage.setItem("zerfallslabor-name", $("name").value); }catch(e){} });
+function pdfBauen(leer){
+  const seiten = []; let c, y;
+  const neueSeite = ()=>{ const cv = document.createElement("canvas"); cv.width = PW; cv.height = PH; c = cv.getContext("2d");
+    c.fillStyle = "#fff"; c.fillRect(0,0,PW,PH); c.textBaseline = "top"; seiten.push(cv); y = RAND; };
+  const font = (gr, fett, kursiv) => c.font = `${kursiv?"italic ":""}${fett?"700":"400"} ${gr}px ${SCHRIFT}`;
+  const umbruch = (text, breite) => { const zeilen = [];
+    String(text).split("\n").forEach(abs => { let z = ""; abs.split(" ").forEach(w => { const v = z ? z+" "+w : w;
+      if(c.measureText(v).width > breite && z){ zeilen.push(z); z = w; } else z = v; }); zeilen.push(z); }); return zeilen; };
+  const platz = h => { if(y + h > PH - RAND) neueSeite(); };
+  function absatz(text, o={}){
+    const gr = o.gr || 24, zh = gr*(o.zh || 1.42), x = o.x || RAND; font(gr, o.fett, o.kursiv);
+    umbruch(text, o.breite || BREIT).forEach(z => { platz(zh); font(gr, o.fett, o.kursiv); c.fillStyle = o.farbe || "#1c2733"; c.fillText(z, x, y); y += zh; });
+    y += o.nach ?? 8;
+  }
+  function linien(n){ for(let i=0;i<n;i++){ platz(46); y += 40; c.strokeStyle = "#b8c0cc"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(RAND, y); c.lineTo(PW-RAND, y); c.stroke(); y += 6; } y += 8; }
+  const heute = new Date().toLocaleDateString("de-DE");
+  const name = leer ? "" : $("name").value.trim();
+
+  // ----- Seite 1: Kopf, Erklärung, Infografik -----
+  neueSeite();
+  c.fillStyle = "#11173a"; c.fillRect(0, 0, PW, 190);
+  c.fillStyle = "#ffb547"; c.fillRect(0, 190, PW, 6);
+  font(20, true); c.fillStyle = "#ffb547"; c.fillText("PHYSIK 10 · RADIOAKTIVITÄT", RAND, 46);
+  font(50, true); c.fillStyle = "#fff"; c.fillText("Zerfallslabor — meine Ergebnisse", RAND, 78);
+  font(22); c.fillStyle = "#c9cfee"; c.fillText("erikdahlmann.github.io/zerfallslabor", RAND, 146);
+  y = 230; font(24); c.fillStyle = "#1c2733";
+  c.fillText("Name:", RAND, y); c.fillText("Datum:", RAND+700, y);
+  c.strokeStyle = "#8a93a5"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(RAND+80, y+30); c.lineTo(RAND+640, y+30); c.moveTo(RAND+790, y+30); c.lineTo(PW-RAND, y+30); c.stroke();
+  font(26, true); if(name) c.fillText(name, RAND+92, y-2); if(!leer) c.fillText(heute, RAND+800, y-2);
+  y += 80;
+
+  // Kasten „Kurz erklärt“
+  const punkte = [
+    ["Zufall: ", "Jeder Atomkern zerfällt zufällig. Wann ein bestimmter Kern zerfällt, kann niemand vorhersagen. Nur für sehr viele Kerne gilt ein genaues Gesetz."],
+    ["Halbwertszeit T½: ", "Nach dieser Zeit ist die Hälfte der Kerne zerfallen — egal, wie viele es am Anfang waren. Nach jeder weiteren Halbwertszeit halbiert sich der Rest wieder."],
+    ["Zerfallskonstante λ: ", "die Wahrscheinlichkeit, dass ein Kern in einer Sekunde zerfällt (Einheit 1/s).   λ = ln 2 / T½ ≈ 0,693 / T½"],
+    ["Zerfallsgesetz: ", "N(t) = N₀ · e^(−λ·t). N₀ ist die Zahl der Kerne am Anfang, N(t) die Zahl zur Zeit t."],
+    ["Aktivität A: ", "die Zahl der Zerfälle pro Sekunde, Einheit Becquerel (Bq). Es gilt A = λ · N."],
+  ];
+  font(23); let hKasten = 70; const innen = BREIT - 60;
+  punkte.forEach(([k,t]) => { font(23); hKasten += umbruch(k + t, innen).length * 33 + 10; });
+  c.fillStyle = "#eaf7fc"; c.fillRect(RAND, y, BREIT, hKasten); c.fillStyle = "#1e9bd0"; c.fillRect(RAND, y, 8, hKasten);
+  font(24, true); c.fillStyle = "#0c6f99"; c.fillText("KURZ ERKLÄRT", RAND+30, y+22); let yy = y + 64;
+  punkte.forEach(([k,t]) => { font(23); umbruch(k + t, innen).forEach((z, i) => {
+      c.fillStyle = "#1c2733";
+      if(i === 0){ font(23, true); c.fillText(k, RAND+30, yy); const w = c.measureText(k).width; font(23); c.fillText(z.slice(k.length), RAND+30+w, yy); }
+      else { font(23); c.fillText(z, RAND+30, yy); }
+      yy += 33; }); yy += 10; });
+  y += hKasten + 34;
+
+  // Infografik Halbwertszeit
+  font(30, true); c.fillStyle = "#1c2733"; c.fillText("Die Halbwertszeit auf einen Blick", RAND, y); y += 50;
+  const gx = RAND + 70, gy = y + 10, gw = 600, gh = 340;
+  const px = k => gx + k/4*gw, py = f => gy + gh - f*gh;
+  c.strokeStyle = "#e3e7ee"; c.lineWidth = 1.5; font(19); c.textBaseline = "middle";
+  [[1,"100 %"],[0.5,"50 %"],[0.25,"25 %"],[0.125,"12,5 %"]].forEach(([f,t]) => { c.setLineDash([6,6]); c.beginPath(); c.moveTo(gx, py(f)); c.lineTo(gx+gw, py(f)); c.stroke(); c.setLineDash([]);
+    c.fillStyle = "#5b6b7b"; c.textAlign = "right"; c.fillText(t, gx-10, py(f)); });
+  c.textAlign = "center";
+  for(let k=0;k<=4;k++){ c.strokeStyle = "#e3e7ee"; c.beginPath(); c.moveTo(px(k), gy); c.lineTo(px(k), gy+gh); c.stroke();
+    c.fillStyle = "#5b6b7b"; c.fillText(k===0 ? "0" : (k===1 ? "T½" : k+" T½"), px(k), gy+gh+22); }
+  c.strokeStyle = "#1c2733"; c.lineWidth = 2.5; c.beginPath(); c.moveTo(gx, gy-10); c.lineTo(gx, gy+gh); c.lineTo(gx+gw+10, gy+gh); c.stroke();
+  c.fillStyle = "#1c2733"; font(19, true); c.fillText("Zeit", gx+gw+5, gy+gh+48); c.save(); c.translate(RAND+4, gy+gh/2); c.rotate(-Math.PI/2); c.fillText("noch vorhandene Kerne", 0, 0); c.restore();
+  c.strokeStyle = "#1e9bd0"; c.lineWidth = 5; c.beginPath();
+  for(let i=0;i<=200;i++){ const k = i/50, f = Math.pow(0.5, k); i ? c.lineTo(px(k), py(f)) : c.moveTo(px(k), py(f)); } c.stroke();
+  for(let k=0;k<=3;k++){ const f = Math.pow(0.5,k); c.fillStyle = "#ff8a3d"; c.beginPath(); c.arc(px(k), py(f), 9, 0, 7); c.fill();
+    if(k<3){ c.strokeStyle = "#ff8a3d"; c.lineWidth = 2.5; c.setLineDash([4,5]); c.beginPath(); c.moveTo(px(k), py(f)); c.lineTo(px(k+1), py(f)); c.lineTo(px(k+1), py(f/2)); c.stroke(); c.setLineDash([]);
+      font(18, true); c.fillStyle = "#c25a14"; c.textAlign = "left"; c.fillText("halbiert", px(k+1)+8, (py(f)+py(f/2))/2); c.textAlign = "center"; } }
+  font(21, true); c.fillStyle = "#1e9bd0"; c.textAlign = "left"; c.fillText("N(t) = N₀ · e^(−λ·t)", px(2.1), py(0.62));
+  // rechts: Beispiel
+  const bx = gx + gw + 70, bw = PW - RAND - bx;
+  c.fillStyle = "#fff6ea"; c.fillRect(bx, gy-10, bw, gh+30); c.fillStyle = "#ff8a3d"; c.fillRect(bx, gy-10, bw, 6);
+  c.textBaseline = "top"; font(21, true); c.fillStyle = "#9a4d12"; c.fillText("Beispiel: T½ = 5 s", bx+20, gy+14);
+  font(19); c.fillStyle = "#1c2733"; c.fillText("λ = 0,693 / 5 s ≈ 0,139 1/s", bx+20, gy+48);
+  [["Zeit","Kerne"],["0 s","2 000"],["5 s","1 000"],["10 s","500"],["15 s","250"],["20 s","125"]].forEach(([a,b],i) => {
+    const ry = gy + 92 + i*38; font(20, i===0); c.fillStyle = i===0 ? "#5b6b7b" : "#1c2733"; c.fillText(a, bx+30, ry); c.textAlign = "right"; c.fillText(b, bx+bw-30, ry); c.textAlign = "left";
+    c.strokeStyle = "#f0dcc3"; c.lineWidth = 1; c.beginPath(); c.moveTo(bx+20, ry+31); c.lineTo(bx+bw-20, ry+31); c.stroke(); });
+  y = gy + gh + 80;
+  // unten: Atom-Felder 64 → 4
+  const fw = BREIT/5;
+  for(let k=0;k<5;k++){ const lebend = 64 >> k, ox = RAND + k*fw + (fw-8*20)/2, oy = y;
+    const rnd = (i) => { const s = Math.sin((i+1)*12.9898 + k*78.233)*43758.5453; return s - Math.floor(s); };
+    const reihenfolge = [...Array(64).keys()].sort((a,b)=>rnd(a)-rnd(b)), alive = new Set(reihenfolge.slice(0, lebend));
+    for(let i=0;i<64;i++){ c.fillStyle = alive.has(i) ? "#ff9d2e" : "#c9d0e3"; c.beginPath(); c.arc(ox + (i%8)*20 + 10, oy + Math.floor(i/8)*20 + 10, alive.has(i) ? 7.5 : 5, 0, 7); c.fill(); }
+    font(20, true); c.fillStyle = "#1c2733"; c.textAlign = "center"; c.fillText(k===0 ? "Start" : (k===1 ? "nach 1 T½" : `nach ${k} T½`), RAND + k*fw + fw/2, oy + 172);
+    font(19); c.fillStyle = "#5b6b7b"; c.fillText(`${lebend} von 64`, RAND + k*fw + fw/2, oy + 200); c.textAlign = "left"; }
+  y += 250;
+  absatz("● orange: noch nicht zerfallen   ● grau: zerfallen. Die zerfallenen Kerne verschwinden nicht, sie haben sich in andere Kerne umgewandelt.", {gr:20, farbe:"#5b6b7b"});
+
+  // ----- Antworten -----
+  neueSeite();
+  absatz("Meine Forscheraufträge", {gr:36, fett:true, nach:20});
+  AUFTRAEGE.forEach((a,i) => {
+    const text = leer ? "" : (antworten["a"+i] || "").trim();
+    platz(190);
+    c.fillStyle = "#ff8a3d"; c.fillRect(RAND, y, 46, 46); font(26, true); c.fillStyle = "#fff"; c.textAlign = "center"; c.fillText(String(i+1), RAND+23, y+9); c.textAlign = "left";
+    font(27, true); c.fillStyle = "#1c2733"; c.fillText(a.t, RAND+62, y+8);
+    if(!leer && antworten["f"+i]){ font(20, true); c.fillStyle = "#1f9d68"; c.textAlign = "right"; c.fillText("✓ erledigt", PW-RAND, y+12); c.textAlign = "left"; }
+    y += 60;
+    absatz("Einstellung: " + a.s.replace(/\s{2,}/g, " · "), {gr:19, farbe:"#0c6f99", nach:4});
+    absatz(a.q, {gr:22, fett:true, nach:6});
+    if(text){ const y0 = y; absatz(text, {gr:22, x:RAND+24, breite:BREIT-24, nach:4}); if(y > y0){ c.fillStyle = "#ffb547"; c.fillRect(RAND+4, y0, 5, y-y0-4); } y += 22; }
+    else linien(3);
+  });
+
+  // ----- Protokoll -----
+  platz(200); y += 10;
+  absatz("Mein Messprotokoll", {gr:30, fett:true, nach:12});
+  const sp = [["Nr.",70],["Atome N₀",150],["T½",110],["Start λ·N₀",170],["stark bis",180],["schwach ab",190],["Hälfte nach",190]];
+  const zeile = (werte, kopf) => { platz(44); let x = RAND; font(20, kopf); werte.forEach((w,j) => { c.fillStyle = kopf ? "#5b6b7b" : "#1c2733"; c.fillText(w, x+8, y+10); x += sp[j][1]; });
+    c.strokeStyle = kopf ? "#8a93a5" : "#dde2ea"; c.lineWidth = kopf ? 2 : 1; c.beginPath(); c.moveTo(RAND, y+42); c.lineTo(PW-RAND, y+42); c.stroke(); y += 44; };
+  zeile(sp.map(s=>s[0]), true);
+  const daten = leer ? [] : protokoll;
+  if(daten.length) daten.forEach((p,i) => zeile([String(i+1), fmt(p.n), fmt(p.T,1)+" s", fmt(p.a0)+" Bq",
+      p.stark===null ? "nie stark" : (p.stark<0 ? "bis zum Ende" : fmt(p.stark,1)+" s"),
+      p.schwach===null ? "—" : (p.schwach===0 ? "von Anfang an" : fmt(p.schwach,1)+" s"), p.h===null ? "—" : fmt(p.h,1)+" s"]));
+  else for(let i=0;i<6;i++) zeile(["","","","","","",""]);
+
+  // Fußzeilen
+  seiten.forEach((cv,i) => { const x = cv.getContext("2d"); x.textBaseline = "alphabetic"; x.font = `400 17px ${SCHRIFT}`; x.fillStyle = "#8a93a5";
+    x.fillText("Zerfallslabor · Physik 10 · Paul-Klee-Gymnasium Overath", RAND, PH-45); x.textAlign = "right"; x.fillText(`Seite ${i+1} von ${seiten.length}`, PW-RAND, PH-45); });
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
+  seiten.forEach((cv,i) => { if(i) doc.addPage(); doc.addImage(cv.toDataURL("image/jpeg", 0.9), "JPEG", 0, 0, 210, 297); });
+  const datei = leer ? "Zerfallslabor_Vorlage.pdf" : `Zerfallslabor_${(name || "Ergebnisse").replace(/[^\wäöüÄÖÜß-]+/g, "_")}.pdf`;
+  doc.save(datei);
+  return seiten.length;
+}
+$("pdf").onclick = () => { if(!window.jspdf){ alert("Die PDF-Funktion ist noch nicht geladen. Bitte kurz warten."); return; } pdfBauen(false); };
+$("pdfLeer").onclick = () => { if(!window.jspdf){ alert("Die PDF-Funktion ist noch nicht geladen. Bitte kurz warten."); return; } pdfBauen(true); };
+window.__pdfTest = pdfBauen;
 
 protokollZeigen();
 neu();
