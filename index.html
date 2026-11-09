@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zerfallslabor · Physik 10</title>
+<style>
+/* Hintergrundbilder in bilder/: KI-erzeugt (ChatGPT über Codex), rein dekorativ und stilisiert – keine physikalische Darstellung. */
+:root{
+  --nacht:#090d24; --nacht2:#11173a; --glas:rgba(255,255,255,.06); --glas2:rgba(255,255,255,.10); --rand:rgba(255,255,255,.14);
+  --text:#eef1ff; --leise:#a9b1d6; --amber:#ffb547; --amber2:#ff8a3d; --cyan:#4fd1ff; --violett:#9d7bff; --grün:#5be3a4; --rot:#ff6b81;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--nacht)}
+body{font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);
+  background:radial-gradient(1200px 700px at 85% -10%,#2a1f5c 0%,transparent 60%),radial-gradient(900px 600px at -10% 30%,#0f2f4d 0%,transparent 55%),var(--nacht);
+  min-height:100vh;line-height:1.55;font-size:17px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 1rem 4rem}
+/* ---------- Kopf ---------- */
+header.held{position:relative;overflow:hidden;border-radius:0 0 28px 28px;margin:0 -1rem 1.6rem;padding:3.2rem 2rem 2.6rem;
+  background:linear-gradient(90deg,rgba(9,13,36,.96) 0%,rgba(9,13,36,.78) 42%,rgba(9,13,36,.15) 100%),url("bilder/hero.jpg") center 78%/cover no-repeat,linear-gradient(135deg,#1b1450,#0b2a44)}
+header.held .marke{display:inline-flex;gap:.5rem;align-items:center;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);
+  background:rgba(255,181,71,.12);border:1px solid rgba(255,181,71,.35);border-radius:999px;padding:.25rem .8rem}
+header.held h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.05;margin:.8rem 0 .6rem;letter-spacing:-.02em;
+  background:linear-gradient(90deg,#fff 0%,#ffd38a 55%,var(--amber2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+header.held p{max-width:34rem;color:#d7dcf7;font-size:1.1rem}
+header.held .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.2rem}
+header.held .chips span{background:var(--glas2);border:1px solid var(--rand);border-radius:999px;padding:.3rem .8rem;font-size:.85rem;color:#dfe4ff;backdrop-filter:blur(6px)}
+/* ---------- Panels ---------- */
+.raster{display:grid;grid-template-columns:1.05fr 1fr;gap:1.2rem}
+@media(max-width:920px){.raster{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid var(--rand);border-radius:22px;padding:1.2rem 1.3rem;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.panel h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;color:var(--leise);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.panel h2 .punkt{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+.panel h2 .punkt.c{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
+.bühne{position:relative;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at center,#141a44 0%,#070a1e 100%);border:1px solid rgba(255,255,255,.08);aspect-ratio:16/10}
+.bühne canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.overlay{position:absolute;left:.7rem;top:.6rem;display:flex;gap:.45rem;flex-wrap:wrap;pointer-events:none}
+.overlay span{background:rgba(9,13,36,.72);border:1px solid var(--rand);border-radius:10px;padding:.2rem .6rem;font-size:.85rem;font-variant-numeric:tabular-nums}
+.overlay b{color:var(--amber)}
+.klickblitz{position:absolute;right:.8rem;top:.7rem;width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan);opacity:0;transition:opacity .25s}
+.klickblitz.an{opacity:1;transition:none}
+/* ---------- Regler ---------- */
+.regler{margin-top:1rem;display:grid;gap:1rem}
+.regel label{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-bottom:.35rem}
+.regel label output{font-variant-numeric:tabular-nums;font-size:1.3rem;color:var(--amber)}
+.regel label output.c{color:var(--cyan)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:999px;background:linear-gradient(90deg,var(--amber2),var(--amber));outline:none;touch-action:pan-y}
+input[type=range].c{background:linear-gradient(90deg,var(--violett),var(--cyan))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:4px solid var(--nacht2);box-shadow:0 0 0 2px rgba(255,255,255,.5),0 4px 14px rgba(0,0,0,.5);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid var(--nacht2);cursor:pointer}
+.schnell{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
+.schnell button{font:inherit;font-size:.82rem;background:var(--glas);border:1px solid var(--rand);color:var(--text);border-radius:999px;padding:.25rem .7rem;cursor:pointer}
+.schnell button:hover{background:var(--glas2)}
+.knöpfe{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-top:1.1rem}
+.knopf{font:inherit;font-weight:800;font-size:1.1rem;border:none;border-radius:16px;padding:.8rem 1.6rem;cursor:pointer;touch-action:manipulation;
+  color:#1a0f00;background:linear-gradient(135deg,#ffd27a,var(--amber2));box-shadow:0 10px 30px rgba(255,138,61,.35)}
+.knopf:active{transform:translateY(1px)}
+.knopf.zweit{background:var(--glas2);color:var(--text);box-shadow:none;border:1px solid var(--rand);font-weight:700}
+.schalter{display:flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none;color:var(--leise);font-weight:600}
+.schalter input{width:22px;height:22px;accent-color:var(--cyan)}
+/* ---------- Formel und Anzeigen ---------- */
+.formel{display:flex;gap:.8rem;flex-wrap:wrap;margin:.2rem 0 1rem}
+.formel div{flex:1 1 210px;background:rgba(79,209,255,.08);border:1px solid rgba(79,209,255,.3);border-radius:14px;padding:.6rem .9rem}
+.formel small{display:block;color:var(--leise);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+.formel .gross{font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+.formel .gross em{font-style:normal;color:var(--cyan)}
+.graph{position:relative;border-radius:16px;overflow:hidden;background:#070a1e;border:1px solid rgba(255,255,255,.08);aspect-ratio:16/11}
+.graph canvas{position:absolute;inset:0;width:100%;height:100%}
+.legende{display:flex;gap:1rem;flex-wrap:wrap;font-size:.86rem;color:var(--leise);margin-top:.6rem}
+.legende i{display:inline-block;width:22px;height:4px;border-radius:2px;vertical-align:middle;margin-right:.35rem}
+.werte{display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-top:.9rem}
+@media(max-width:560px){.werte{grid-template-columns:repeat(2,1fr)}}
+.wert{background:var(--glas);border:1px solid var(--rand);border-radius:14px;padding:.55rem .7rem}
+.wert small{display:block;color:var(--leise);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+.wert b{font-size:1.2rem;font-variant-numeric:tabular-nums}
+.wert.a b{color:var(--amber)}.wert.c b{color:var(--cyan)}
+/* ---------- Protokoll ---------- */
+.breit{margin-top:1.2rem}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
+th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--leise);border-bottom:1px solid var(--rand);padding:.45rem .5rem}
+td{border-bottom:1px solid rgba(255,255,255,.07);padding:.5rem}
+td.a{color:var(--amber);font-weight:700}td.c{color:var(--cyan);font-weight:700}
+.leer{color:var(--leise);font-style:italic}
+.tabwrap{overflow-x:auto}
+/* ---------- Aufträge ---------- */
+section.forschen{position:relative;margin-top:2rem;border-radius:28px;overflow:hidden;padding:15rem 1.4rem 1.6rem;background:var(--nacht2);border:1px solid var(--rand);isolation:isolate}
+section.forschen::before{content:"";position:absolute;inset:0 0 auto 0;height:440px;z-index:-1;background:url("bilder/labor.jpg") center 66%/cover no-repeat;
+  -webkit-mask-image:linear-gradient(180deg,#000 35%,transparent 100%);mask-image:linear-gradient(180deg,#000 35%,transparent 100%)}
+@media(max-width:700px){section.forschen{padding-top:9rem}section.forschen::before{height:300px}}
+section.forschen>h2{font-size:clamp(1.6rem,3.4vw,2.3rem);letter-spacing:-.01em;margin-bottom:.3rem}
+section.forschen>p{color:#cfd5f5;max-width:46rem}
+.karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;margin-top:1.4rem}
+.karte{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));border:1px solid var(--rand);border-radius:20px;padding:1.1rem 1.15rem;display:flex;flex-direction:column;gap:.55rem;backdrop-filter:blur(10px)}
+.karte .kopf{display:flex;align-items:center;gap:.7rem}
+.karte .nr{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#1a0f00;background:linear-gradient(135deg,#ffd27a,var(--amber2))}
+.karte.c .nr{background:linear-gradient(135deg,#9ff0ff,var(--cyan))}
+.karte.v .nr{background:linear-gradient(135deg,#cdb8ff,var(--violett))}
+.karte h3{font-size:1.08rem;line-height:1.25}
+.karte .einst{font-size:.85rem;color:var(--cyan);font-weight:700}
+.karte ol,.karte ul{padding-left:1.15rem;color:#dde2fb}
+.karte li{margin:.15rem 0}
+.karte textarea{font:inherit;font-size:.95rem;width:100%;min-height:4.2rem;border-radius:12px;border:1px solid var(--rand);background:rgba(0,0,0,.25);color:var(--text);padding:.55rem .7rem;resize:vertical}
+.karte textarea:focus{outline:2px solid var(--cyan);border-color:transparent}
+.karte .los{align-self:flex-start;font:inherit;font-size:.85rem;font-weight:700;color:var(--cyan);background:rgba(79,209,255,.1);border:1px solid rgba(79,209,255,.35);border-radius:999px;padding:.25rem .8rem;cursor:pointer}
+.karte label.fertig{display:flex;gap:.45rem;align-items:center;color:var(--leise);font-size:.9rem;cursor:pointer}
+.karte label.fertig input{width:20px;height:20px;accent-color:var(--grün)}
+.karte.erledigt{border-color:rgba(91,227,164,.55)}
+.loesung{display:none;font-size:.9rem;color:#bff3d8;background:rgba(91,227,164,.08);border:1px dashed rgba(91,227,164,.4);border-radius:12px;padding:.5rem .7rem}
+body.lehrkraft .loesung{display:block}
+.fortschritt{display:flex;align-items:center;gap:.8rem;margin-top:1rem;color:var(--leise)}
+.balken{flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.balken div{height:100%;width:0;background:linear-gradient(90deg,var(--grün),var(--cyan));transition:width .4s}
+footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="held">
+  <span class="marke">⚛ Physik 10 · Radioaktivität</span>
+  <h1>Das Zerfallslabor</h1>
+  <p>Wann zerfällt ein Atomkern? Niemand weiß es — es ist reiner Zufall. Und trotzdem folgen viele Kerne zusammen einem ganz genauen Gesetz. Finde heraus, welchem.</p>
+  <div class="chips"><span>50 bis 250 000 Atome</span><span>Halbwertszeit 0,1 s bis 2 s</span><span>Kurve live: N(t) = N₀ · e<sup>−λt</sup></span></div>
+</header>
+
+<div class="raster">
+  <!-- ======= Simulation ======= -->
+  <div class="panel">
+    <h2><span class="punkt"></span>Die Atome</h2>
+    <div class="bühne" id="bühne">
+      <canvas id="atome"></canvas>
+      <div class="overlay"><span>noch da: <b id="oDa">—</b></span><span>Zeit: <b id="oZeit">0,00 s</b></span><span id="oKlick">Klick 0</span></div>
+      <div class="klickblitz" id="blitz"></div>
+    </div>
+    <div class="regler">
+      <div class="regel">
+        <label for="rN"><span>Anzahl der Atome</span> <output id="vN">500</output></label>
+        <input type="range" id="rN" min="0" max="1000" step="1" value="270">
+        <div class="schnell" id="schnellN"></div>
+      </div>
+      <div class="regel">
+        <label for="rT"><span>Halbwertszeit T<sub>½</sub></span> <output id="vT" class="c">1,0 s</output></label>
+        <input type="range" id="rT" class="c" min="1" max="20" step="1" value="10">
+        <div class="schnell" id="schnellT"></div>
+      </div>
+    </div>
+    <div class="knöpfe">
+      <button class="knopf" id="los">▶ Los</button>
+      <button class="knopf zweit" id="neu">↺ Neu</button>
+      <label class="schalter"><input type="checkbox" id="ton" checked> Klick nach jeder Halbwertszeit</label>
+    </div>
+  </div>
+
+  <!-- ======= Graph ======= -->
+  <div class="panel">
+    <h2><span class="punkt c"></span>Die Kurve</h2>
+    <div class="formel">
+      <div><small>Zerfallskonstante</small><span class="gross" id="fLambda">λ = ln 2 / T½</span></div>
+      <div><small>Zerfallsgesetz</small><span class="gross">N(t) = N₀ · e<sup>−<em>λ</em>·t</sup></span></div>
+    </div>
+    <div class="graph" id="graphbox"><canvas id="graph"></canvas></div>
+    <div class="legende">
+      <span><i style="background:var(--amber)"></i>gemessen (gezählte Atome)</span>
+      <span><i style="background:repeating-linear-gradient(90deg,var(--cyan) 0 6px,transparent 6px 10px)"></i>berechnet: N₀ · e<sup>−λt</sup></span>
+      <span><i style="background:rgba(255,255,255,.35);height:2px"></i>Vielfache von T½</span>
+    </div>
+    <div class="werte">
+      <div class="wert a"><small>gemessen N(t)</small><b id="wMess">—</b></div>
+      <div class="wert c"><small>berechnet</small><b id="wRech">—</b></div>
+      <div class="wert"><small>Abweichung</small><b id="wAbw">—</b></div>
+      <div class="wert"><small>zerfallen nach 1 s</small><b id="wEins">—</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= Protokoll ======= -->
+<div class="panel breit">
+  <h2><span class="punkt"></span>Messprotokoll <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:.85rem">— jeder fertige Durchlauf wird automatisch eingetragen</span></h2>
+  <div class="tabwrap"><table>
+    <thead><tr><th>Nr.</th><th>Atome N₀</th><th>T½</th><th>λ</th><th>nach 1 s zerfallen: gemessen</th><th>berechnet</th><th>Hälfte erreicht nach</th></tr></thead>
+    <tbody id="protokoll"><tr><td colspan="7" class="leer">Noch kein Durchlauf. Drücke oben auf „Los“ und warte, bis der Lauf zu Ende ist.</td></tr></tbody>
+  </table></div>
+  <div class="knöpfe"><button class="knopf zweit" id="protLeeren" style="font-size:.9rem;padding:.45rem 1rem">Protokoll leeren</button></div>
+</div>
+
+<!-- ======= Forscheraufträge ======= -->
+<section class="forschen">
+  <h2>Forscheraufträge</h2>
+  <p>Bearbeite die Aufträge der Reihe nach. Mit „Einstellen“ stellst du die passenden Werte oben automatisch ein. Deine Antworten bleiben auf diesem Gerät gespeichert — übertrage die wichtigsten Ergebnisse in dein Heft.</p>
+  <div class="fortschritt"><span id="fText">0 von 8 erledigt</span><div class="balken"><div id="fBalken"></div></div></div>
+  <div class="karten" id="karten"></div>
+</section>
+
+<footer>Physik 10 · Paul-Klee-Gymnasium Overath · Die Zerfälle werden zufällig ausgelost — wie in der Natur. Hintergrundbilder KI-erzeugt und stilisiert.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const fmt = (x, d=0) => x.toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d});
+const LN2 = Math.LN2;
+const NMIN = 50, NMAX = 250000, TMAXFAKTOR = 8;   // Lauf endet nach 8 Halbwertszeiten
+
+// ---------- Regler ----------
+function nAusRegler(v){
+  let n = NMIN * Math.pow(NMAX/NMIN, v/1000);
+  const r = n < 1000 ? 10 : (n < 10000 ? 100 : 1000);
+  return Math.max(NMIN, Math.min(NMAX, Math.round(n/r)*r));
+}
+function reglerAusN(n){ return Math.round(1000*Math.log(n/NMIN)/Math.log(NMAX/NMIN)); }
+const tAusRegler = v => v/10;
+
+let N0 = 500, T = 1.0, lam = LN2/T;
+function einstellenAnzeigen(){
+  N0 = nAusRegler(+$("rN").value); T = tAusRegler(+$("rT").value); lam = LN2/T;
+  $("vN").textContent = fmt(N0);
+  $("vT").textContent = fmt(T,1) + " s";
+  $("fLambda").innerHTML = `λ = 0,693 / ${fmt(T,1)} s = <em>${fmt(lam,2)}</em> 1/s`;
+}
+[50,500,5000,50000,250000].forEach(n=>{ const b=document.createElement("button"); b.textContent=fmt(n); b.onclick=()=>{ $("rN").value=reglerAusN(n); neu(); }; $("schnellN").appendChild(b); });
+[0.1,0.5,1,2].forEach(t=>{ const b=document.createElement("button"); b.textContent=fmt(t,1)+" s"; b.onclick=()=>{ $("rT").value=Math.round(t*10); neu(); }; $("schnellT").appendChild(b); });
+$("rN").addEventListener("input", neu);
+$("rT").addEventListener("input", neu);
+
+// ---------- Zustand ----------
+let lebend, lebendListe, anzahl, t, laeuft=false, fertig=false, verlauf=[], klicks=0, letzteZeit=0;
+let tHaelfte=null, anteilEins=null, blitze=[];
+
+function neu(){
+  laeuft = false; fertig = false; $("los").textContent = "▶ Los";
+  einstellenAnzeigen();
+  lebend = new Uint8Array(N0).fill(1);
+  lebendListe = new Int32Array(N0); for(let i=0;i<N0;i++) lebendListe[i]=i;
+  anzahl = N0; t = 0; verlauf = [[0,N0]]; klicks = 0; tHaelfte = null; anteilEins = null; blitze = [];
+  layoutAtome(); zeichneAtome(true); zeichneGraph(); anzeigen();
+}
+
+// ---------- Zufall ----------
+function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
+function binomial(n, p){
+  if(n <= 0 || p <= 0) return 0;
+  if(n < 4000){ let k=0; for(let i=0;i<n;i++) if(Math.random()<p) k++; return k; }
+  const m = n*p, s = Math.sqrt(n*p*(1-p));
+  return Math.max(0, Math.min(n, Math.round(m + s*gauss())));
+}
+
+// ---------- Schritt ----------
+function schritt(dt){
+  const t0 = t, n0 = anzahl;
+  const p = 1 - Math.exp(-lam*dt);
+  const k = binomial(anzahl, p);
+  const jetzt = performance.now();
+  for(let j=0;j<k;j++){
+    const pos = Math.floor(Math.random()*anzahl);
+    const idx = lebendListe[pos];
+    lebendListe[pos] = lebendListe[anzahl-1]; anzahl--;
+    lebend[idx] = 0; blitze.push([idx, jetzt]);
+  }
+  t += dt;
+  verlauf.push([t, anzahl]);
+  // Hälfte erreicht? (linear zwischen den beiden Zeitpunkten)
+  if(tHaelfte===null && anzahl <= N0/2){ tHaelfte = n0===anzahl ? t : t0 + (n0 - N0/2)/(n0-anzahl)*(t-t0); }
+  // Anteil nach genau 1 s
+  if(anteilEins===null && t >= 1){ const nEins = n0 + (anzahl-n0)*(1-t0)/(t-t0); anteilEins = 1 - nEins/N0; }
+  // Klick nach jeder Halbwertszeit
+  while(t >= (klicks+1)*T && klicks < TMAXFAKTOR){ klicks++; klick(); }
+  if(anzahl === 0 || t >= TMAXFAKTOR*T){ laeuft = false; fertig = true; $("los").textContent = "▶ Nochmal"; protokollieren(); }
+}
+
+let raf = null;
+// nächster Schritt: Bildwechsel des Browsers, notfalls nach 50 ms per Zeitgeber (z. B. in verdeckten Fenstern)
+function naechster(){ let erledigt=false; const weiter=()=>{ if(erledigt) return; erledigt=true; schleife(performance.now()); };
+  requestAnimationFrame(weiter); setTimeout(weiter, 50); return true; }
+function schleife(ts){
+  if(!laeuft){ raf=null; return; }
+  const dt = Math.max(0, Math.min(0.1, (ts - letzteZeit)/1000)); letzteZeit = ts;
+  // bei sehr kurzer Halbwertszeit in kleinen Teilschritten rechnen
+  const teile = Math.max(1, Math.ceil(dt/(T/40)));
+  for(let i=0;i<teile && laeuft;i++) schritt(dt/teile);
+  zeichneAtome(false); zeichneGraph(); anzeigen();
+  raf = naechster();
+}
+$("los").onclick = ()=>{
+  if(fertig) neu();
+  if(!laeuft){ tonStart(); laeuft = true; $("los").textContent = "⏸ Pause"; letzteZeit = performance.now(); if(!raf) raf=naechster(); }
+  else { laeuft = false; $("los").textContent = "▶ Weiter"; }
+};
+$("neu").onclick = neu;
+
+// ---------- Ton ----------
+let ac = null;
+function tonStart(){ if(!$("ton").checked) return; try{ if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended") ac.resume(); }catch(e){} }
+function klick(){
+  $("oKlick").textContent = `Klick ${klicks} = ${klicks} · T½`;
+  const b = $("blitz"); b.classList.add("an"); setTimeout(()=>b.classList.remove("an"), 60);
+  if(!$("ton").checked || !ac) return;
+  const z = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
+  o.type = "square"; o.frequency.setValueAtTime(1800, z); o.frequency.exponentialRampToValueAtTime(600, z+0.04);
+  f.type = "bandpass"; f.frequency.value = 1500; f.Q.value = 1.2;
+  g.gain.setValueAtTime(0.0001, z); g.gain.exponentialRampToValueAtTime(0.5, z+0.003); g.gain.exponentialRampToValueAtTime(0.0001, z+0.06);
+  o.connect(f); f.connect(g); g.connect(ac.destination); o.start(z); o.stop(z+0.07);
+}
+
+// ---------- Atome zeichnen ----------
+const cvA = $("atome"), ctxA = cvA.getContext("2d");
+let W=0,H=0, spalten=1, zeilen=1, zelle=1, modus="kreis", pos=null, bild=null, bildCv=null, bildCtx=null, sprites={};
+const FARBE_TOT = [44,58,110], FARBE_LEB = [255,181,71], FARBE_BLITZ=[255,255,255];
+function größe(){
+  const r = cvA.getBoundingClientRect(), d = window.devicePixelRatio||1;
+  W = Math.max(10, Math.round(r.width*d)); H = Math.max(10, Math.round(r.height*d));
+  cvA.width = W; cvA.height = H;
+}
+function sprite(farbe, kern, glanz){
+  const s = Math.max(4, Math.ceil(zelle)), c = document.createElement("canvas"); c.width=c.height=s*2;
+  const x = c.getContext("2d"), g = x.createRadialGradient(s,s,0,s,s,s);
+  g.addColorStop(0, kern); g.addColorStop(0.35, farbe); g.addColorStop(1, "rgba(0,0,0,0)");
+  x.fillStyle = g; x.beginPath(); x.arc(s,s,s*glanz,0,7); x.fill(); return c;
+}
+function layoutAtome(){
+  größe();
+  spalten = Math.ceil(Math.sqrt(N0*W/H)); zeilen = Math.ceil(N0/spalten);
+  zelle = Math.min(W/spalten, H/zeilen);
+  modus = N0 <= 3000 ? "kreis" : "pixel";
+  if(modus==="kreis"){
+    const ox=(W-spalten*zelle)/2, oy=(H-zeilen*zelle)/2;
+    pos = new Float32Array(N0*2);
+    for(let i=0;i<N0;i++){ const j = 0.18*zelle;
+      pos[2*i]   = ox + (i%spalten+0.5)*zelle + (Math.random()-.5)*j;
+      pos[2*i+1] = oy + (Math.floor(i/spalten)+0.5)*zelle + (Math.random()-.5)*j; }
+    sprites.leb = sprite("rgba(255,170,60,.95)","#fff4d6",0.95);
+    sprites.tot = sprite("rgba(70,90,160,.6)","#4c5f9e",0.55);
+    sprites.blitz = sprite("rgba(160,230,255,.95)","#ffffff",1);
+  } else {
+    bildCv = document.createElement("canvas"); bildCv.width = spalten; bildCv.height = zeilen;
+    bildCtx = bildCv.getContext("2d"); bild = bildCtx.createImageData(spalten, zeilen);
+    const d = bild.data; for(let i=0;i<spalten*zeilen;i++){ const k=4*i; if(i<N0){ d[k]=FARBE_LEB[0]; d[k+1]=FARBE_LEB[1]; d[k+2]=FARBE_LEB[2]; d[k+3]=255; } else d[k+3]=0; }
+  }
+}
+function zeichneAtome(alles){
+  const jetzt = performance.now();
+  ctxA.clearRect(0,0,W,H);
+  if(modus==="kreis"){
+    const s = zelle*0.62;
+    for(let i=0;i<N0;i++){ const sp = lebend[i] ? sprites.leb : sprites.tot; ctxA.drawImage(sp, pos[2*i]-s, pos[2*i+1]-s, 2*s, 2*s); }
+    blitze = blitze.filter(([i,t0])=>{ const a = (jetzt-t0)/350; if(a>=1) return false;
+      ctxA.globalAlpha = 1-a; const g = s*(1.2+a*1.6); ctxA.drawImage(sprites.blitz, pos[2*i]-g, pos[2*i+1]-g, 2*g, 2*g); ctxA.globalAlpha = 1; return true; });
+  } else {
+    const d = bild.data;
+    // neue Zerfälle hell aufblitzen lassen, ältere abdunkeln
+    blitze = blitze.filter(([i,t0])=>{ const k=4*i, alt = jetzt-t0 > 220; const f = alt ? FARBE_TOT : FARBE_BLITZ; d[k]=f[0]; d[k+1]=f[1]; d[k+2]=f[2]; return !alt; });
+    bildCtx.putImageData(bild,0,0);
+    ctxA.imageSmoothingEnabled = false;
+    const bw = spalten*zelle, bh = zeilen*zelle;
+    ctxA.drawImage(bildCv, (W-bw)/2, (H-bh)/2, bw, bh);
+  }
+}
+new ResizeObserver(()=>{ if(!lebend) return; const alt=modus; größe();
+  spalten = Math.ceil(Math.sqrt(N0*W/H)); zeilen = Math.ceil(N0/spalten); zelle=Math.min(W/spalten,H/zeilen);
+  if(alt==="kreis"){ const merk = lebend; layoutAtome(); lebend = merk; } else { zelle=Math.min(W/spalten,H/zeilen); }
+  zeichneAtome(true); zeichneGraph(); }).observe($("bühne"));
+
+// ---------- Graph ----------
+const cvG = $("graph"), ctxG = cvG.getContext("2d");
+function zeichneGraph(){
+  const r = cvG.getBoundingClientRect(), d = window.devicePixelRatio||1;
+  const GW = Math.round(r.width*d), GH = Math.round(r.height*d);
+  if(cvG.width!==GW || cvG.height!==GH){ cvG.width=GW; cvG.height=GH; }
+  const c = ctxG; c.clearRect(0,0,GW,GH);
+  const L = 62*d, R = 46*d, O = 16*d, U = 40*d, bw = GW-L-R, bh = GH-O-U, tMax = TMAXFAKTOR*T;
+  const px = tt => L + tt/tMax*bw, py = n => O + bh - n/N0*bh;
+  c.font = `${12*d}px -apple-system,Segoe UI,Roboto,sans-serif`; c.textBaseline="middle";
+  // Hilfslinien
+  for(let k=0;k<=TMAXFAKTOR;k++){ const x=px(k*T); c.strokeStyle = k? "rgba(255,255,255,.12)":"rgba(255,255,255,.3)"; c.lineWidth=d; c.setLineDash(k?[3*d,4*d]:[]); c.beginPath(); c.moveTo(x,O); c.lineTo(x,O+bh); c.stroke();
+    c.setLineDash([]); c.fillStyle="#a9b1d6"; c.textAlign="center"; c.fillText(k===0?"0":(k===1?"T½":k+"T½"), x, O+bh+13*d);
+    c.fillStyle="#6f78a6"; c.fillText(fmt(k*T,1)+" s", x, O+bh+28*d); }
+  [1,0.5,0.25,0.125,0].forEach(f=>{ const y=py(f*N0); c.strokeStyle="rgba(255,255,255,.1)"; c.beginPath(); c.moveTo(L,y); c.lineTo(L+bw,y); c.stroke();
+    c.fillStyle="#a9b1d6"; c.textAlign="right"; c.fillText(fmt(f*N0), L-8*d, y); c.textAlign="left"; c.fillStyle="#6f78a6"; c.fillText(fmt(f*100, f===0.125?1:0)+" %", L+bw+6*d, y); });
+  // Theorie
+  c.strokeStyle="#4fd1ff"; c.lineWidth=2.5*d; c.setLineDash([7*d,5*d]); c.beginPath();
+  for(let i=0;i<=300;i++){ const tt=i/300*tMax, n=N0*Math.exp(-lam*tt); i?c.lineTo(px(tt),py(n)):c.moveTo(px(tt),py(n)); } c.stroke(); c.setLineDash([]);
+  // Messung
+  if(verlauf.length>1){
+    c.shadowColor="rgba(255,181,71,.7)"; c.shadowBlur=10*d; c.strokeStyle="#ffb547"; c.lineWidth=3*d; c.beginPath();
+    const schritt = Math.max(1, Math.floor(verlauf.length/1500));
+    for(let i=0;i<verlauf.length;i+=schritt){ const [tt,n]=verlauf[i]; i?c.lineTo(px(tt),py(n)):c.moveTo(px(tt),py(n)); }
+    const [tl,nl] = verlauf[verlauf.length-1]; c.lineTo(px(tl),py(nl)); c.stroke(); c.shadowBlur=0;
+    c.fillStyle="#fff"; c.beginPath(); c.arc(px(tl),py(nl),4.5*d,0,7); c.fill();
+  }
+  // 1-s-Marke
+  if(1 <= tMax){ const x=px(1); c.strokeStyle="rgba(157,123,255,.7)"; c.lineWidth=1.5*d; c.beginPath(); c.moveTo(x,O); c.lineTo(x,O+bh); c.stroke();
+    c.fillStyle="#cdb8ff"; c.textAlign="left"; c.fillText("1 s", x+5*d, O+10*d); }
+  // Achsen
+  c.strokeStyle="rgba(255,255,255,.5)"; c.lineWidth=1.5*d; c.beginPath(); c.moveTo(L,O); c.lineTo(L,O+bh); c.lineTo(L+bw,O+bh); c.stroke();
+}
+
+// ---------- Anzeigen ----------
+function anzeigen(){
+  const erwartet = N0*Math.exp(-lam*t);
+  $("oDa").textContent = fmt(anzahl);
+  $("oZeit").textContent = fmt(t,2)+" s";
+  if(t===0) $("oKlick").textContent = "Klick 0";
+  $("wMess").textContent = fmt(anzahl);
+  $("wRech").textContent = fmt(erwartet, erwartet<100?1:0);
+  $("wAbw").textContent = t===0 ? "—" : (erwartet>0 ? ((anzahl>=erwartet?"+":"−")+fmt(Math.abs(anzahl-erwartet)/N0*100,1)+" %") : "—");
+  $("wEins").textContent = anteilEins===null ? (t===0?"—":"läuft …") : fmt(anteilEins*100,1)+" %";
+}
+
+// ---------- Protokoll ----------
+let protokoll = []; try{ protokoll = JSON.parse(localStorage.getItem("zerfallslabor-protokoll")||"[]"); }catch(e){}
+function protokollieren(){
+  protokoll.push({n:N0, T, lam, eins: anteilEins, einsR: 1-Math.exp(-lam), h: tHaelfte});
+  try{ localStorage.setItem("zerfallslabor-protokoll", JSON.stringify(protokoll)); }catch(e){}
+  protokollZeigen();
+}
+function protokollZeigen(){
+  const tb = $("protokoll");
+  if(!protokoll.length){ tb.innerHTML = '<tr><td colspan="7" class="leer">Noch kein Durchlauf. Drücke oben auf „Los“ und warte, bis der Lauf zu Ende ist.</td></tr>'; return; }
+  tb.innerHTML = protokoll.map((p,i)=>`<tr><td>${i+1}</td><td>${fmt(p.n)}</td><td>${fmt(p.T,1)} s</td><td>${fmt(p.lam,2)} 1/s</td>
+    <td class="a">${p.eins===null?"—":fmt(p.eins*100,1)+" %"}</td><td class="c">${fmt(p.einsR*100,1)} %</td>
+    <td>${p.h===null?"—":fmt(p.h,2)+" s"} <span style="color:#6f78a6">(T½ = ${fmt(p.T,1)} s)</span></td></tr>`).reverse().join("");
+}
+$("protLeeren").onclick = ()=>{ if(!confirm("Protokoll wirklich leeren?")) return; protokoll=[]; try{localStorage.removeItem("zerfallslabor-protokoll");}catch(e){} protokollZeigen(); };
+
+// ---------- Forscheraufträge ----------
+const AUFTRAEGE = [
+  {f:"", t:"Zufall bei wenigen Atomen", e:[50,1], s:"50 Atome · T½ = 1 s",
+   a:["Starte drei Läufe nacheinander mit denselben Einstellungen.","Vergleiche die gelbe Messkurve mit der blauen Kurve.","Schau im Protokoll: Nach wie vielen Sekunden war jeweils die Hälfte zerfallen?"],
+   q:"Was fällt dir auf? Warum ist jeder Lauf anders?",
+   l:"Die Messkurve springt in Stufen und weicht deutlich von der e-Funktion ab; der Zeitpunkt der Hälfte schwankt um 1 s. Jeder Kern zerfällt zufällig."},
+  {f:"", t:"Je mehr Atome, desto …", e:[250000,1], s:"T½ = 1 s · 500, 5 000, 50 000, 250 000 Atome",
+   a:["Lass je einen Lauf mit 500, 5 000, 50 000 und 250 000 Atomen laufen.","Achte auf die Abweichung unter dem Graphen."],
+   q:"Formuliere eine Je-desto-Regel für die Schwankungen.",
+   l:"Je mehr Atome, desto genauer liegt die Messung auf N₀·e^(−λt). Bei 250 000 Atomen ist die Abweichung meist unter 0,5 %."},
+  {f:"c", t:"Kurze oder lange Halbwertszeit?", e:[50000,2], s:"50 000 Atome · T½ = 2 s, 1 s, 0,5 s, 0,2 s, 0,1 s",
+   a:["Lass für jede der fünf Halbwertszeiten einen Lauf laufen.","Lies jeweils ab: Wie viel Prozent sind nach 1 s zerfallen? (Feld „zerfallen nach 1 s“ und Protokoll)"],
+   q:"Je kürzer die Halbwertszeit, desto … Ergänze und begründe.",
+   l:"2 s → 29 %, 1 s → 50 %, 0,5 s → 75 %, 0,2 s → 97 %, 0,1 s → 99,9 %. Je kürzer T½, desto größer der Anteil, der in 1 s zerfällt."},
+  {f:"c", t:"Was verrät λ?", e:[5000,1], s:"beliebig · Regler T½ bewegen",
+   a:["Bewege den Regler für T½ langsam und beobachte λ in der Anzeige.","Halbiere T½ von 1 s auf 0,5 s. Was passiert mit λ?","Überprüfe eine Anzeige mit dem Taschenrechner: λ = 0,693 / T½."],
+   q:"Wie hängen λ und T½ zusammen? Was bedeutet ein großes λ für den Zerfall?",
+   l:"λ = ln 2 / T½: halbe Halbwertszeit → doppeltes λ. Großes λ heißt: Die Kerne zerfallen schnell, die Kurve fällt steil ab."},
+  {f:"", t:"Hör hin: immer die Hälfte", e:[250000,2], s:"250 000 Atome · T½ = 2 s · Ton an",
+   a:["Starte einen Lauf und höre auf die Klicks.","Lies nach dem 1., 2. und 3. Klick ab, wie viel Prozent noch da sind (rechte Achse)."],
+   q:"Welches Muster erkennst du? Wie viel wäre nach dem 5. Klick noch da?",
+   l:"Nach jedem Klick (eine Halbwertszeit) ist wieder die Hälfte weg: 50 %, 25 %, 12,5 % … nach 5 T½ noch 3,1 %."},
+  {f:"v", t:"Rechnen statt messen", e:[250000,0.5], s:"250 000 Atome · T½ = 0,5 s",
+   a:["Berechne λ für T½ = 0,5 s.","Berechne mit N(t) = N₀ · e^(−λt) den Anteil, der nach t = 1 s noch da ist (e^x-Taste).","Starte den Lauf und vergleiche."],
+   q:"Deine Rechnung und dein Messwert:",
+   l:"λ = 1,386 1/s; e^(−1,386) = 0,25 → 25 % noch da, 75 % zerfallen. Passt zu genau zwei Halbwertszeiten in 1 s."},
+  {f:"v", t:"Und das einzelne Atom?", e:[50,2], s:"50 Atome · T½ = 2 s",
+   a:["Beobachte die Atome im linken Bild genau.","Kannst du vorhersagen, welches Atom als nächstes zerfällt?","Ein Atom hat schon 3 Halbwertszeiten überlebt. Zerfällt es jetzt eher?"],
+   q:"Was kann man über ein einzelnes Atom sagen — und was nur über viele?",
+   l:"Für ein einzelnes Atom ist der Zeitpunkt nicht vorhersagbar, und es „altert“ nicht: Seine Zerfallswahrscheinlichkeit bleibt immer gleich. Gesetzmäßig ist nur das Verhalten sehr vieler Atome."},
+  {f:"c", t:"Zusatz: Kohlenstoff-14", e:null, s:"ohne Simulation, mit Taschenrechner",
+   a:["C-14 hat die Halbwertszeit T½ = 5 730 Jahre.","Berechne λ in der Einheit 1/Jahr.","Welcher Anteil der C-14-Kerne zerfällt in einem Jahr?"],
+   q:"Rechnung und Ergebnis:",
+   l:"λ = 0,693 / 5 730 a ≈ 1,21 · 10⁻⁴ 1/a. In einem Jahr zerfallen etwa 0,012 % der Kerne."},
+];
+let antworten = {}; try{ antworten = JSON.parse(localStorage.getItem("zerfallslabor-antworten")||"{}"); }catch(e){}
+function merken(){ try{ localStorage.setItem("zerfallslabor-antworten", JSON.stringify(antworten)); }catch(e){} fortschritt(); }
+function fortschritt(){ const n = AUFTRAEGE.filter((_,i)=>antworten["f"+i]).length; $("fText").textContent = `${n} von ${AUFTRAEGE.length} erledigt`; $("fBalken").style.width = (n/AUFTRAEGE.length*100)+"%"; }
+AUFTRAEGE.forEach((a,i)=>{
+  const k = document.createElement("div"); k.className = "karte " + a.f + (antworten["f"+i]?" erledigt":"");
+  k.innerHTML = `<div class="kopf"><span class="nr">${i+1}</span><h3>${a.t}</h3></div>
+    <div class="einst">${a.s}</div><ol>${a.a.map(x=>`<li>${x}</li>`).join("")}</ol>
+    ${a.e?'<button class="los">↑ Einstellen</button>':""}
+    <b style="font-size:.95rem">${a.q}</b><textarea placeholder="Deine Beobachtung …"></textarea>
+    <div class="loesung"><b>Erwartung:</b> ${a.l}</div>
+    <label class="fertig"><input type="checkbox"> erledigt</label>`;
+  const ta = k.querySelector("textarea"), cb = k.querySelector("input[type=checkbox]");
+  ta.value = antworten["a"+i] || ""; cb.checked = !!antworten["f"+i];
+  ta.addEventListener("input", ()=>{ antworten["a"+i]=ta.value; merken(); });
+  cb.addEventListener("change", ()=>{ antworten["f"+i]=cb.checked; k.classList.toggle("erledigt", cb.checked); merken(); });
+  const b = k.querySelector(".los");
+  if(b) b.onclick = ()=>{ $("rN").value = reglerAusN(a.e[0]); $("rT").value = Math.round(a.e[1]*10); neu(); $("bühne").scrollIntoView({behavior:"smooth",block:"center"}); };
+  $("karten").appendChild(k);
+});
+fortschritt();
+if(new URLSearchParams(location.search).has("loesungen")) document.body.classList.add("lehrkraft");
+
+protokollZeigen();
+neu();
+})();
+</script>
+</body>
+</html>
