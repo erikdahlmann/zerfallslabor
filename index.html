@@ -8,41 +8,72 @@
 /* Hintergrundbilder in bilder/: KI-erzeugt (ChatGPT über Codex), rein dekorativ und stilisiert – keine physikalische Darstellung. */
 :root{
   --nacht:#090d24; --nacht2:#11173a; --glas:rgba(255,255,255,.06); --glas2:rgba(255,255,255,.10); --rand:rgba(255,255,255,.14);
-  --text:#eef1ff; --leise:#a9b1d6; --amber:#ffb547; --amber2:#ff8a3d; --cyan:#4fd1ff; --violett:#9d7bff; --grün:#5be3a4; --rot:#ff6b81;
+  --text:#eef1ff; --leise:#a9b1d6; --amber:#ffb547; --amber2:#ff8a3d; --cyan:#4fd1ff; --violett:#9d7bff; --grün:#5be3a4; --rot:#ff5a6e;
+  --stufe:#7d86b3; --puls:2s;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{background:var(--nacht)}
 body{font-family:ui-rounded,"SF Pro Rounded",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--text);
   background:radial-gradient(1200px 700px at 85% -10%,#2a1f5c 0%,transparent 60%),radial-gradient(900px 600px at -10% 30%,#0f2f4d 0%,transparent 55%),var(--nacht);
   min-height:100vh;line-height:1.55;font-size:17px}
-.wrap{max-width:1180px;margin:0 auto;padding:0 1rem 4rem}
+.wrap{max-width:1280px;margin:0 auto;padding:0 1rem 4rem}
 /* ---------- Kopf ---------- */
-header.held{position:relative;overflow:hidden;border-radius:0 0 28px 28px;margin:0 -1rem 1.6rem;padding:3.2rem 2rem 2.6rem;
+header.held{position:relative;overflow:hidden;border-radius:0 0 28px 28px;margin:0 -1rem 1.6rem;padding:3rem 2rem 2.4rem;
   background:linear-gradient(90deg,rgba(9,13,36,.96) 0%,rgba(9,13,36,.78) 42%,rgba(9,13,36,.15) 100%),url("bilder/hero.jpg") center 78%/cover no-repeat,linear-gradient(135deg,#1b1450,#0b2a44)}
 header.held .marke{display:inline-flex;gap:.5rem;align-items:center;font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);
   background:rgba(255,181,71,.12);border:1px solid rgba(255,181,71,.35);border-radius:999px;padding:.25rem .8rem}
 header.held h1{font-size:clamp(2.2rem,5vw,3.6rem);line-height:1.05;margin:.8rem 0 .6rem;letter-spacing:-.02em;
   background:linear-gradient(90deg,#fff 0%,#ffd38a 55%,var(--amber2) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-header.held p{max-width:34rem;color:#d7dcf7;font-size:1.1rem}
+header.held p{max-width:36rem;color:#d7dcf7;font-size:1.1rem}
 header.held .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:1.2rem}
 header.held .chips span{background:var(--glas2);border:1px solid var(--rand);border-radius:999px;padding:.3rem .8rem;font-size:.85rem;color:#dfe4ff;backdrop-filter:blur(6px)}
 /* ---------- Panels ---------- */
-.raster{display:grid;grid-template-columns:1.05fr 1fr;gap:1.2rem}
-@media(max-width:920px){.raster{grid-template-columns:1fr}}
 .panel{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.035));border:1px solid var(--rand);border-radius:22px;padding:1.2rem 1.3rem;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
-.panel h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;color:var(--leise);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+.panel h2{font-size:1.05rem;letter-spacing:.08em;text-transform:uppercase;color:var(--leise);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
 .panel h2 .punkt{width:9px;height:9px;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
 .panel h2 .punkt.c{background:var(--cyan);box-shadow:0 0 12px var(--cyan)}
-.bühne{position:relative;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at center,#141a44 0%,#070a1e 100%);border:1px solid rgba(255,255,255,.08);aspect-ratio:16/10}
+.panel h2 .punkt.r{background:var(--rot);box-shadow:0 0 12px var(--rot)}
+.panel h2 small{text-transform:none;letter-spacing:0;font-weight:400;font-size:.85rem}
+.raster{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:1.2rem}
+@media(max-width:920px){.raster{grid-template-columns:1fr}}
+/* ---------- Labor: Bühne + Strahlermeter ---------- */
+.labor{display:grid;grid-template-columns:1fr 270px;gap:1rem;align-items:stretch}
+@media(max-width:980px){.labor{grid-template-columns:1fr}}
+.bühne{position:relative;border-radius:16px;overflow:hidden;background:radial-gradient(ellipse at center,#141a44 0%,#070a1e 100%);
+  border:2px solid rgba(255,255,255,.08);aspect-ratio:2/1;transition:border-color .6s,box-shadow .6s}
+.bühne.stark{border-color:rgba(255,90,110,.75);animation:pulsRot var(--puls) ease-in-out infinite}
+.bühne.mittel{border-color:rgba(255,181,71,.6);box-shadow:0 0 26px rgba(255,181,71,.25)}
+.bühne.schwach{border-color:rgba(91,227,164,.45);box-shadow:0 0 14px rgba(91,227,164,.15)}
+@keyframes pulsRot{0%,100%{box-shadow:0 0 22px rgba(255,90,110,.35),inset 0 0 30px rgba(255,90,110,.15)}50%{box-shadow:0 0 60px rgba(255,90,110,.7),inset 0 0 60px rgba(255,90,110,.3)}}
 .bühne canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .overlay{position:absolute;left:.7rem;top:.6rem;display:flex;gap:.45rem;flex-wrap:wrap;pointer-events:none}
-.overlay span{background:rgba(9,13,36,.72);border:1px solid var(--rand);border-radius:10px;padding:.2rem .6rem;font-size:.85rem;font-variant-numeric:tabular-nums}
+.overlay span{background:rgba(9,13,36,.75);border:1px solid var(--rand);border-radius:10px;padding:.2rem .6rem;font-size:.85rem;font-variant-numeric:tabular-nums}
 .overlay b{color:var(--amber)}
+.schild{position:absolute;right:.7rem;bottom:.6rem;pointer-events:none;font-weight:900;letter-spacing:.12em;font-size:clamp(.8rem,1.6vw,1.05rem);
+  padding:.3rem .8rem;border-radius:10px;background:rgba(9,13,36,.8);border:1px solid var(--stufe);color:var(--stufe);text-transform:uppercase;transition:color .5s,border-color .5s}
 .klickblitz{position:absolute;right:.8rem;top:.7rem;width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan);opacity:0;transition:opacity .25s}
 .klickblitz.an{opacity:1;transition:none}
+.meter{border-radius:16px;border:1px solid var(--rand);background:rgba(0,0,0,.25);padding:1rem;display:flex;flex-direction:column;gap:.7rem;align-items:center;text-align:center}
+.meter .warn{width:92px;height:92px;color:var(--stufe);transition:color .5s;filter:drop-shadow(0 0 0 transparent)}
+.meter.stark .warn{animation:warnPuls var(--puls) ease-in-out infinite}
+.meter.mittel .warn{animation:warnPuls calc(var(--puls)*1.6) ease-in-out infinite}
+@keyframes warnPuls{0%,100%{transform:scale(1);filter:drop-shadow(0 0 4px currentColor)}50%{transform:scale(1.08);filter:drop-shadow(0 0 22px currentColor)}}
+.meter .stufe{font-weight:900;letter-spacing:.08em;text-transform:uppercase;font-size:1.25rem;line-height:1.15;color:var(--stufe);transition:color .5s}
+.meter .bq{font-size:2.1rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.meter .bq small{font-size:1rem;color:var(--leise);font-weight:600}
+.meter .erkl{font-size:.82rem;color:var(--leise)}
+.skala{width:100%;display:flex;flex-direction:column;gap:.3rem}
+.skala .leiste{position:relative;height:16px;border-radius:999px;overflow:hidden;background:linear-gradient(90deg,#1d6b52 0%,#5be3a4 32%,#ffb547 32%,#ff8a3d 52%,#ff5a6e 52%,#ff2d55 100%);opacity:.35}
+.skala .füll{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,#1d6b52 0%,#5be3a4 32%,#ffb547 32%,#ff8a3d 52%,#ff5a6e 52%,#ff2d55 100%);background-size:var(--bs,100%) 100%;transition:width .25s}
+.skala .wrapL{position:relative}
+.skala .marken{display:flex;justify-content:space-between;font-size:.7rem;color:var(--leise)}
+.meter .theorie{font-size:.86rem;background:rgba(79,209,255,.08);border:1px solid rgba(79,209,255,.3);border-radius:12px;padding:.45rem .6rem;width:100%;font-variant-numeric:tabular-nums}
+.meter .theorie em{font-style:normal;color:var(--cyan);font-weight:700}
+@media(max-width:980px){.meter{display:grid;grid-template-columns:90px 1fr;text-align:left;align-items:center}.meter .warn{width:80px;height:80px;grid-row:span 2}.skala,.meter .theorie,.meter .erkl{grid-column:1/-1}}
 /* ---------- Regler ---------- */
-.regler{margin-top:1rem;display:grid;gap:1rem}
+.regler{margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+@media(max-width:700px){.regler{grid-template-columns:1fr}}
 .regel label{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;margin-bottom:.35rem}
 .regel label output{font-variant-numeric:tabular-nums;font-size:1.3rem;color:var(--amber)}
 .regel label output.c{color:var(--cyan)}
@@ -58,14 +89,17 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
   color:#1a0f00;background:linear-gradient(135deg,#ffd27a,var(--amber2));box-shadow:0 10px 30px rgba(255,138,61,.35)}
 .knopf:active{transform:translateY(1px)}
 .knopf.zweit{background:var(--glas2);color:var(--text);box-shadow:none;border:1px solid var(--rand);font-weight:700}
+.knopf.klein{font-size:.9rem;padding:.45rem 1rem}
 .schalter{display:flex;align-items:center;gap:.5rem;cursor:pointer;user-select:none;color:var(--leise);font-weight:600}
 .schalter input{width:22px;height:22px;accent-color:var(--cyan)}
 /* ---------- Formel und Anzeigen ---------- */
 .formel{display:flex;gap:.8rem;flex-wrap:wrap;margin:.2rem 0 1rem}
 .formel div{flex:1 1 210px;background:rgba(79,209,255,.08);border:1px solid rgba(79,209,255,.3);border-radius:14px;padding:.6rem .9rem}
+.formel div.r{background:rgba(255,90,110,.08);border-color:rgba(255,90,110,.35)}
 .formel small{display:block;color:var(--leise);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
-.formel .gross{font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+.formel .gross{font-size:1.2rem;font-weight:700;font-variant-numeric:tabular-nums}
 .formel .gross em{font-style:normal;color:var(--cyan)}
+.formel .r .gross em{color:#ff8fa0}
 .graph{position:relative;border-radius:16px;overflow:hidden;background:#070a1e;border:1px solid rgba(255,255,255,.08);aspect-ratio:16/11}
 .graph canvas{position:absolute;inset:0;width:100%;height:100%}
 .legende{display:flex;gap:1rem;flex-wrap:wrap;font-size:.86rem;color:var(--leise);margin-top:.6rem}
@@ -81,7 +115,7 @@ input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;bac
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:.95rem}
 th{text-align:left;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--leise);border-bottom:1px solid var(--rand);padding:.45rem .5rem}
 td{border-bottom:1px solid rgba(255,255,255,.07);padding:.5rem}
-td.a{color:var(--amber);font-weight:700}td.c{color:var(--cyan);font-weight:700}
+td.a{color:var(--amber);font-weight:700}td.c{color:var(--cyan);font-weight:700}td.r{color:#ff8fa0;font-weight:700}td.g{color:var(--grün);font-weight:700}
 .leer{color:var(--leise);font-style:italic}
 .tabwrap{overflow-x:auto}
 /* ---------- Aufträge ---------- */
@@ -97,13 +131,15 @@ section.forschen>p{color:#cfd5f5;max-width:46rem}
 .karte .nr{flex:0 0 auto;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-weight:800;color:#1a0f00;background:linear-gradient(135deg,#ffd27a,var(--amber2))}
 .karte.c .nr{background:linear-gradient(135deg,#9ff0ff,var(--cyan))}
 .karte.v .nr{background:linear-gradient(135deg,#cdb8ff,var(--violett))}
+.karte.r .nr{background:linear-gradient(135deg,#ffb3bd,var(--rot))}
 .karte h3{font-size:1.08rem;line-height:1.25}
 .karte .einst{font-size:.85rem;color:var(--cyan);font-weight:700}
 .karte ol,.karte ul{padding-left:1.15rem;color:#dde2fb}
 .karte li{margin:.15rem 0}
 .karte textarea{font:inherit;font-size:.95rem;width:100%;min-height:4.2rem;border-radius:12px;border:1px solid var(--rand);background:rgba(0,0,0,.25);color:var(--text);padding:.55rem .7rem;resize:vertical}
 .karte textarea:focus{outline:2px solid var(--cyan);border-color:transparent}
-.karte .los{align-self:flex-start;font:inherit;font-size:.85rem;font-weight:700;color:var(--cyan);background:rgba(79,209,255,.1);border:1px solid rgba(79,209,255,.35);border-radius:999px;padding:.25rem .8rem;cursor:pointer}
+.karte .losreihe{display:flex;gap:.4rem;flex-wrap:wrap}
+.karte .los{font:inherit;font-size:.85rem;font-weight:700;color:var(--cyan);background:rgba(79,209,255,.1);border:1px solid rgba(79,209,255,.35);border-radius:999px;padding:.25rem .8rem;cursor:pointer}
 .karte label.fertig{display:flex;gap:.45rem;align-items:center;color:var(--leise);font-size:.9rem;cursor:pointer}
 .karte label.fertig input{width:20px;height:20px;accent-color:var(--grün)}
 .karte.erledigt{border-color:rgba(91,227,164,.55)}
@@ -112,8 +148,11 @@ body.lehrkraft .loesung{display:block}
 .fortschritt{display:flex;align-items:center;gap:.8rem;margin-top:1rem;color:var(--leise)}
 .balken{flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
 .balken div{height:100%;width:0;background:linear-gradient(90deg,var(--grün),var(--cyan));transition:width .4s}
+.merk{margin-top:1.4rem;border-radius:20px;padding:1rem 1.2rem;background:rgba(255,90,110,.07);border:1px solid rgba(255,90,110,.35)}
+.merk h3{font-size:1rem;letter-spacing:.08em;text-transform:uppercase;color:#ff8fa0;margin-bottom:.4rem}
+.merk p{color:#e4e7fb}
 footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -122,46 +161,66 @@ footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
 <header class="held">
   <span class="marke">⚛ Physik 10 · Radioaktivität</span>
   <h1>Das Zerfallslabor</h1>
-  <p>Wann zerfällt ein Atomkern? Niemand weiß es — es ist reiner Zufall. Und trotzdem folgen viele Kerne zusammen einem ganz genauen Gesetz. Finde heraus, welchem.</p>
-  <div class="chips"><span>50 bis 250 000 Atome</span><span>Halbwertszeit 0,1 s bis 2 s</span><span>Kurve live: N(t) = N₀ · e<sup>−λt</sup></span></div>
+  <p>Wann zerfällt ein Atomkern? Niemand weiß es — es ist reiner Zufall. Und trotzdem folgen viele Kerne zusammen einem genauen Gesetz. Und wovon hängt es ab, ob ein Stoff stark oder schwach strahlt?</p>
+  <div class="chips"><span>50 bis 5 000 Atome</span><span>Halbwertszeit 1 s bis 10 s</span><span>Strahlermeter: stark · mittel · schwach</span><span>Kurve live: N(t) = N₀ · e<sup>−λt</sup></span></div>
 </header>
 
-<div class="raster">
-  <!-- ======= Simulation ======= -->
-  <div class="panel">
-    <h2><span class="punkt"></span>Die Atome</h2>
+<!-- ======= Labor ======= -->
+<div class="panel">
+  <h2><span class="punkt"></span>Die Atome</h2>
+  <div class="labor">
     <div class="bühne" id="bühne">
       <canvas id="atome"></canvas>
-      <div class="overlay"><span>noch da: <b id="oDa">—</b></span><span>Zeit: <b id="oZeit">0,00 s</b></span><span id="oKlick">Klick 0</span></div>
+      <div class="overlay"><span>noch da: <b id="oDa">—</b></span><span>Zeit: <b id="oZeit">0,0 s</b></span><span id="oKlick">Klick 0</span></div>
+      <div class="schild" id="schild">bereit</div>
       <div class="klickblitz" id="blitz"></div>
     </div>
-    <div class="regler">
-      <div class="regel">
-        <label for="rN"><span>Anzahl der Atome</span> <output id="vN">500</output></label>
-        <input type="range" id="rN" min="0" max="1000" step="1" value="270">
-        <div class="schnell" id="schnellN"></div>
+    <div class="meter" id="meter">
+      <svg class="warn" viewBox="-50 -50 100 100" aria-hidden="true">
+        <circle r="47" fill="none" stroke="currentColor" stroke-width="4"/>
+        <circle r="8" fill="currentColor"/>
+        <g fill="currentColor"><path id="flügel" d="M 6.9 -12 L 19.5 -33.8 A 39 39 0 0 1 39 0 L 13.9 0 A 13.9 13.9 0 0 0 6.9 -12 Z"/>
+        <use href="#flügel" transform="rotate(120)"/><use href="#flügel" transform="rotate(240)"/></g>
+      </svg>
+      <div class="stufe" id="mStufe">bereit</div>
+      <div class="bq"><span id="mBq">—</span> <small>Bq</small></div>
+      <div class="erkl">Becquerel = Zerfälle pro Sekunde</div>
+      <div class="skala">
+        <div class="wrapL"><div class="leiste"></div><div class="füll" id="mFüll" style="position:absolute;inset:0 auto 0 0"></div></div>
+        <div class="marken"><span>schwach</span><span>mittel</span><span>stark</span></div>
       </div>
-      <div class="regel">
-        <label for="rT"><span>Halbwertszeit T<sub>½</sub></span> <output id="vT" class="c">1,0 s</output></label>
-        <input type="range" id="rT" class="c" min="1" max="20" step="1" value="10">
-        <div class="schnell" id="schnellT"></div>
-      </div>
-    </div>
-    <div class="knöpfe">
-      <button class="knopf" id="los">▶ Los</button>
-      <button class="knopf zweit" id="neu">↺ Neu</button>
-      <label class="schalter"><input type="checkbox" id="ton" checked> Klick nach jeder Halbwertszeit</label>
+      <div class="theorie">berechnet: A = λ · N<br><span id="mTheo">—</span></div>
     </div>
   </div>
+  <div class="regler">
+    <div class="regel">
+      <label for="rN"><span>Anzahl der Atome N₀</span> <output id="vN">2 000</output></label>
+      <input type="range" id="rN" min="0" max="1000" step="1" value="801">
+      <div class="schnell" id="schnellN"></div>
+    </div>
+    <div class="regel">
+      <label for="rT"><span>Halbwertszeit T<sub>½</sub></span> <output id="vT" class="c">5,0 s</output></label>
+      <input type="range" id="rT" class="c" min="2" max="20" step="1" value="10">
+      <div class="schnell" id="schnellT"></div>
+    </div>
+  </div>
+  <div class="knöpfe">
+    <button class="knopf" id="los">▶ Los</button>
+    <button class="knopf zweit" id="neu">↺ Neu</button>
+    <label class="schalter"><input type="checkbox" id="ton" checked> Klick nach jeder Halbwertszeit</label>
+    <label class="schalter"><input type="checkbox" id="knacken"> Knacken bei jedem Zerfall (wie ein Zählrohr)</label>
+  </div>
+</div>
 
-  <!-- ======= Graph ======= -->
+<div class="raster">
+  <!-- ======= Graph N ======= -->
   <div class="panel">
-    <h2><span class="punkt c"></span>Die Kurve</h2>
+    <h2><span class="punkt c"></span>Die Kurve: Wie viele Atome sind noch da?</h2>
     <div class="formel">
       <div><small>Zerfallskonstante</small><span class="gross" id="fLambda">λ = ln 2 / T½</span></div>
       <div><small>Zerfallsgesetz</small><span class="gross">N(t) = N₀ · e<sup>−<em>λ</em>·t</sup></span></div>
     </div>
-    <div class="graph" id="graphbox"><canvas id="graph"></canvas></div>
+    <div class="graph"><canvas id="graph"></canvas></div>
     <div class="legende">
       <span><i style="background:var(--amber)"></i>gemessen (gezählte Atome)</span>
       <span><i style="background:repeating-linear-gradient(90deg,var(--cyan) 0 6px,transparent 6px 10px)"></i>berechnet: N₀ · e<sup>−λt</sup></span>
@@ -171,30 +230,47 @@ footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
       <div class="wert a"><small>gemessen N(t)</small><b id="wMess">—</b></div>
       <div class="wert c"><small>berechnet</small><b id="wRech">—</b></div>
       <div class="wert"><small>Abweichung</small><b id="wAbw">—</b></div>
-      <div class="wert"><small>zerfallen nach 1 s</small><b id="wEins">—</b></div>
+      <div class="wert"><small>Hälfte erreicht nach</small><b id="wHalb">—</b></div>
     </div>
+  </div>
+
+  <!-- ======= Graph Aktivität ======= -->
+  <div class="panel">
+    <h2><span class="punkt r"></span>Die Strahlung: Wie viele zerfallen pro Sekunde?</h2>
+    <div class="formel">
+      <div class="r"><small>Aktivität (Zerfälle pro Sekunde)</small><span class="gross" id="fAkt">A = λ · N</span></div>
+    </div>
+    <div class="graph"><canvas id="aktgraph"></canvas></div>
+    <div class="legende">
+      <span><i style="background:#ff5a6e"></i>gemessen: dieser Lauf</span>
+      <span><i style="background:repeating-linear-gradient(90deg,#ff8fa0 0 6px,transparent 6px 10px)"></i>berechnet: λ · N₀ · e<sup>−λt</sup></span>
+      <span><i style="background:rgba(205,184,255,.8)"></i>frühere Läufe zum Vergleich</span>
+    </div>
+    <p style="font-size:.86rem;color:var(--leise);margin-top:.5rem">Achsen bleiben immer gleich (0–60 s, 0–400 Bq). So kannst du Läufe direkt vergleichen. Werte über 400 Bq stehen am oberen Rand.</p>
+    <div class="knöpfe" style="margin-top:.6rem"><button class="knopf zweit klein" id="geistLeeren">Vergleichskurven löschen</button></div>
   </div>
 </div>
 
 <!-- ======= Protokoll ======= -->
 <div class="panel breit">
-  <h2><span class="punkt"></span>Messprotokoll <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:.85rem">— jeder fertige Durchlauf wird automatisch eingetragen</span></h2>
+  <h2><span class="punkt"></span>Messprotokoll <small>— jeder fertige Durchlauf wird automatisch eingetragen</small></h2>
   <div class="tabwrap"><table>
-    <thead><tr><th>Nr.</th><th>Atome N₀</th><th>T½</th><th>λ</th><th>nach 1 s zerfallen: gemessen</th><th>berechnet</th><th>Hälfte erreicht nach</th></tr></thead>
-    <tbody id="protokoll"><tr><td colspan="7" class="leer">Noch kein Durchlauf. Drücke oben auf „Los“ und warte, bis der Lauf zu Ende ist.</td></tr></tbody>
+    <thead><tr><th>Nr.</th><th>Atome N₀</th><th>T½</th><th>λ</th><th>Start: λ · N₀</th><th>starker Strahler bis</th><th>schwacher Strahler ab</th><th>Hälfte erreicht nach</th></tr></thead>
+    <tbody id="protokoll"></tbody>
   </table></div>
-  <div class="knöpfe"><button class="knopf zweit" id="protLeeren" style="font-size:.9rem;padding:.45rem 1rem">Protokoll leeren</button></div>
+  <div class="knöpfe"><button class="knopf zweit klein" id="protLeeren">Protokoll leeren</button></div>
 </div>
 
 <!-- ======= Forscheraufträge ======= -->
 <section class="forschen">
   <h2>Forscheraufträge</h2>
-  <p>Bearbeite die Aufträge der Reihe nach. Mit „Einstellen“ stellst du die passenden Werte oben automatisch ein. Deine Antworten bleiben auf diesem Gerät gespeichert — übertrage die wichtigsten Ergebnisse in dein Heft.</p>
+  <p>Bearbeite die Aufträge der Reihe nach. Mit „Einstellen“ stellst du die passenden Werte oben automatisch ein. Deine Antworten bleiben auf diesem Gerät gespeichert. Übertrage die wichtigsten Ergebnisse in dein Heft.</p>
   <div class="fortschritt"><span id="fText">0 von 8 erledigt</span><div class="balken"><div id="fBalken"></div></div></div>
   <div class="karten" id="karten"></div>
+  <div class="merk loesung" style="display:none" id="merkL"></div>
 </section>
 
-<footer>Physik 10 · Paul-Klee-Gymnasium Overath · Die Zerfälle werden zufällig ausgelost — wie in der Natur. Hintergrundbilder KI-erzeugt und stilisiert.</footer>
+<footer>Physik 10 · Paul-Klee-Gymnasium Overath · Die Zerfälle werden zufällig ausgelost — wie in der Natur. Grenzen im Strahlermeter: stark ab 175 Bq, schwach unter 40 Bq (für dieses Labor festgelegt). Hintergrundbilder KI-erzeugt und stilisiert.</footer>
 </div>
 
 <script>
@@ -203,49 +279,64 @@ footer{margin-top:2rem;color:#7d86b3;font-size:.82rem;text-align:center}
 const $ = id => document.getElementById(id);
 const fmt = (x, d=0) => x.toLocaleString("de-DE",{minimumFractionDigits:d,maximumFractionDigits:d});
 const LN2 = Math.LN2;
-const NMIN = 50, NMAX = 250000, TMAXFAKTOR = 8;   // Lauf endet nach 8 Halbwertszeiten
+const NMIN = 50, NMAX = 5000, TMAXFAKTOR = 8;      // Lauf endet nach 8 Halbwertszeiten
+const STARK = 175, SCHWACH = 40;                    // Grenzen des Strahlermeters in Bq
+const AX = 60, AY = 400;                            // feste Achsen des Aktivitätsgraphen
 
 // ---------- Regler ----------
 function nAusRegler(v){
-  let n = NMIN * Math.pow(NMAX/NMIN, v/1000);
-  const r = n < 1000 ? 10 : (n < 10000 ? 100 : 1000);
+  const n = NMIN * Math.pow(NMAX/NMIN, v/1000);
+  const r = n < 1000 ? 10 : 100;
   return Math.max(NMIN, Math.min(NMAX, Math.round(n/r)*r));
 }
 function reglerAusN(n){ return Math.round(1000*Math.log(n/NMIN)/Math.log(NMAX/NMIN)); }
-const tAusRegler = v => v/10;
+const tAusRegler = v => v/2;
+const reglerAusT = t => Math.round(t*2);
 
-let N0 = 500, T = 1.0, lam = LN2/T;
+let N0 = 2000, T = 5, lam = LN2/T;
 function einstellenAnzeigen(){
   N0 = nAusRegler(+$("rN").value); T = tAusRegler(+$("rT").value); lam = LN2/T;
   $("vN").textContent = fmt(N0);
   $("vT").textContent = fmt(T,1) + " s";
-  $("fLambda").innerHTML = `λ = 0,693 / ${fmt(T,1)} s = <em>${fmt(lam,2)}</em> 1/s`;
+  $("fLambda").innerHTML = `λ = 0,693 / ${fmt(T,1)} s = <em>${fmt(lam,3)}</em> 1/s`;
 }
-[50,500,5000,50000,250000].forEach(n=>{ const b=document.createElement("button"); b.textContent=fmt(n); b.onclick=()=>{ $("rN").value=reglerAusN(n); neu(); }; $("schnellN").appendChild(b); });
-[0.1,0.5,1,2].forEach(t=>{ const b=document.createElement("button"); b.textContent=fmt(t,1)+" s"; b.onclick=()=>{ $("rT").value=Math.round(t*10); neu(); }; $("schnellT").appendChild(b); });
+[50,200,500,1000,2000,5000].forEach(n=>{ const b=document.createElement("button"); b.textContent=fmt(n); b.onclick=()=>{ $("rN").value=reglerAusN(n); neu(); }; $("schnellN").appendChild(b); });
+[1,2,5,10].forEach(t=>{ const b=document.createElement("button"); b.textContent=fmt(t,0)+" s"; b.onclick=()=>{ $("rT").value=reglerAusT(t); neu(); }; $("schnellT").appendChild(b); });
 $("rN").addEventListener("input", neu);
 $("rT").addEventListener("input", neu);
 
 // ---------- Zustand ----------
 let lebend, lebendListe, anzahl, t, laeuft=false, fertig=false, verlauf=[], klicks=0, letzteZeit=0;
-let tHaelfte=null, anteilEins=null, blitze=[];
+let tHaelfte=null, blitze=[], zerfallsLog=[], aktMess=null, aktVerlauf=[], letzteProbe=-1;
+let stufe="bereit", tStarkBis=null, tSchwachAb=null, warStark=false, geister=[];
 
 function neu(){
+  if(aktVerlauf.length > 10 && !fertig) geistMerken();   // abgebrochener Lauf bleibt als Vergleich
   laeuft = false; fertig = false; $("los").textContent = "▶ Los";
   einstellenAnzeigen();
   lebend = new Uint8Array(N0).fill(1);
   lebendListe = new Int32Array(N0); for(let i=0;i<N0;i++) lebendListe[i]=i;
-  anzahl = N0; t = 0; verlauf = [[0,N0]]; klicks = 0; tHaelfte = null; anteilEins = null; blitze = [];
-  layoutAtome(); zeichneAtome(true); zeichneGraph(); anzeigen();
+  anzahl = N0; t = 0; verlauf = [[0,N0]]; klicks = 0; tHaelfte = null; blitze = [];
+  zerfallsLog = []; aktMess = null; aktVerlauf = []; letzteProbe = -1;
+  tStarkBis = null; tSchwachAb = null;
+  stufe = stufeAus(lam*N0, null); warStark = stufe==="stark"; if(stufe==="schwach") tSchwachAb = 0;
+  layoutAtome(); zeichneAtome(); zeichneGraph(); zeichneAkt(); anzeigen(); stufeZeigen("bereit");
 }
 
 // ---------- Zufall ----------
-function gauss(){ let u=0,v=0; while(!u) u=Math.random(); while(!v) v=Math.random(); return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v); }
 function binomial(n, p){
   if(n <= 0 || p <= 0) return 0;
-  if(n < 4000){ let k=0; for(let i=0;i<n;i++) if(Math.random()<p) k++; return k; }
-  const m = n*p, s = Math.sqrt(n*p*(1-p));
-  return Math.max(0, Math.min(n, Math.round(m + s*gauss())));
+  let k=0; for(let i=0;i<n;i++) if(Math.random()<p) k++; return k;   // n ≤ 5 000: exakt auslosen
+}
+
+// ---------- Strahlerstufe mit Hysterese (verhindert Flackern an den Grenzen) ----------
+function stufeAus(A, alt){
+  const h = 0.08;
+  if(A <= 0 && anzahl === 0) return "keine";
+  if(alt==="stark")   return A < STARK*(1-h) ? (A < SCHWACH ? "schwach" : "mittel") : "stark";
+  if(alt==="mittel")  return A > STARK*(1+h) ? "stark" : (A < SCHWACH*(1-h) ? "schwach" : "mittel");
+  if(alt==="schwach") return A > STARK*(1+h) ? "stark" : (A > SCHWACH*(1+h) ? "mittel" : "schwach");
+  return A >= STARK ? "stark" : (A >= SCHWACH ? "mittel" : "schwach");
 }
 
 // ---------- Schritt ----------
@@ -258,17 +349,34 @@ function schritt(dt){
     const pos = Math.floor(Math.random()*anzahl);
     const idx = lebendListe[pos];
     lebendListe[pos] = lebendListe[anzahl-1]; anzahl--;
-    lebend[idx] = 0; blitze.push([idx, jetzt]);
+    lebend[idx] = 0; blitze.push([idx, jetzt, Math.random()*6.283]);
   }
   t += dt;
   verlauf.push([t, anzahl]);
-  // Hälfte erreicht? (linear zwischen den beiden Zeitpunkten)
+  zerfallsLog.push([t, k]);
+  knacken(k);
+  // gemessene Aktivität: Zerfälle im gleitenden Fenster
+  const fenster = Math.max(0.25, Math.min(1, T/5));
+  while(zerfallsLog.length && zerfallsLog[0][0] < t - fenster) zerfallsLog.shift();
+  if(t >= 0.3){
+    let s = 0; for(const z of zerfallsLog) s += z[1];
+    aktMess = s / Math.min(fenster, t);
+    const tMitte = t - Math.min(fenster, t)/2;     // das Fenster misst die Mitte seiner Zeitspanne
+    const neuS = stufeAus(aktMess, stufe);
+    if(neuS !== stufe){
+      if(stufe==="stark" && tStarkBis===null) tStarkBis = tMitte;
+      if(neuS==="schwach" && tSchwachAb===null) tSchwachAb = tMitte;
+      if(neuS==="stark") warStark = true;
+      stufe = neuS;
+    }
+  }
+  if(t - letzteProbe >= 0.1 && aktMess!==null){ aktVerlauf.push([t - Math.min(fenster,t)/2, aktMess]); letzteProbe = t; }
   if(tHaelfte===null && anzahl <= N0/2){ tHaelfte = n0===anzahl ? t : t0 + (n0 - N0/2)/(n0-anzahl)*(t-t0); }
-  // Anteil nach genau 1 s
-  if(anteilEins===null && t >= 1){ const nEins = n0 + (anzahl-n0)*(1-t0)/(t-t0); anteilEins = 1 - nEins/N0; }
-  // Klick nach jeder Halbwertszeit
   while(t >= (klicks+1)*T && klicks < TMAXFAKTOR){ klicks++; klick(); }
-  if(anzahl === 0 || t >= TMAXFAKTOR*T){ laeuft = false; fertig = true; $("los").textContent = "▶ Nochmal"; protokollieren(); }
+  if(anzahl === 0 || t >= TMAXFAKTOR*T){
+    if(anzahl===0){ stufe = "keine"; aktMess = 0; aktVerlauf.push([t, 0]); if(tSchwachAb===null) tSchwachAb = t; }
+    laeuft = false; fertig = true; $("los").textContent = "▶ Nochmal"; protokollieren(); geistMerken();
+  }
 }
 
 let raf = null;
@@ -278,22 +386,28 @@ function naechster(){ let erledigt=false; const weiter=()=>{ if(erledigt) return
 function schleife(ts){
   if(!laeuft){ raf=null; return; }
   const dt = Math.max(0, Math.min(0.1, (ts - letzteZeit)/1000)); letzteZeit = ts;
-  // bei sehr kurzer Halbwertszeit in kleinen Teilschritten rechnen
-  const teile = Math.max(1, Math.ceil(dt/(T/40)));
+  const teile = Math.max(1, Math.ceil(dt/0.02));
   for(let i=0;i<teile && laeuft;i++) schritt(dt/teile);
-  zeichneAtome(false); zeichneGraph(); anzeigen();
+  zeichneAtome(); zeichneGraph(); zeichneAkt(); anzeigen(); stufeZeigen(stufe);
   raf = naechster();
 }
 $("los").onclick = ()=>{
   if(fertig) neu();
-  if(!laeuft){ tonStart(); laeuft = true; $("los").textContent = "⏸ Pause"; letzteZeit = performance.now(); if(!raf) raf=naechster(); }
+  if(!laeuft){ tonStart(); laeuft = true; $("los").textContent = "⏸ Pause"; letzteZeit = performance.now(); stufeZeigen(stufe); if(!raf) raf=naechster(); }
   else { laeuft = false; $("los").textContent = "▶ Weiter"; }
 };
 $("neu").onclick = neu;
 
 // ---------- Ton ----------
-let ac = null;
-function tonStart(){ if(!$("ton").checked) return; try{ if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended") ac.resume(); }catch(e){} }
+let ac = null, rauschen = null;
+function tonStart(){
+  if(!$("ton").checked && !$("knacken").checked) return;
+  try{ if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)(); if(ac.state==="suspended") ac.resume();
+    if(!rauschen){ const n = Math.round(ac.sampleRate*0.004); rauschen = ac.createBuffer(1, n, ac.sampleRate); const d = rauschen.getChannelData(0);
+      for(let i=0;i<n;i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/n, 3); }
+  }catch(e){}
+}
+$("ton").addEventListener("change", tonStart); $("knacken").addEventListener("change", tonStart);
 function klick(){
   $("oKlick").textContent = `Klick ${klicks} = ${klicks} · T½`;
   const b = $("blitz"); b.classList.add("an"); setTimeout(()=>b.classList.remove("an"), 60);
@@ -301,99 +415,157 @@ function klick(){
   const z = ac.currentTime, o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
   o.type = "square"; o.frequency.setValueAtTime(1800, z); o.frequency.exponentialRampToValueAtTime(600, z+0.04);
   f.type = "bandpass"; f.frequency.value = 1500; f.Q.value = 1.2;
-  g.gain.setValueAtTime(0.0001, z); g.gain.exponentialRampToValueAtTime(0.5, z+0.003); g.gain.exponentialRampToValueAtTime(0.0001, z+0.06);
-  o.connect(f); f.connect(g); g.connect(ac.destination); o.start(z); o.stop(z+0.07);
+  g.gain.setValueAtTime(0.0001, z); g.gain.exponentialRampToValueAtTime(0.6, z+0.003); g.gain.exponentialRampToValueAtTime(0.0001, z+0.08);
+  o.connect(f); f.connect(g); g.connect(ac.destination); o.start(z); o.stop(z+0.09);
+}
+function knacken(k){
+  if(!k || !ac || !rauschen || !$("knacken").checked) return;
+  const n = Math.min(k, 6), z = ac.currentTime;
+  for(let i=0;i<n;i++){ const s = ac.createBufferSource(), g = ac.createGain(); s.buffer = rauschen; g.gain.value = 0.35;
+    s.connect(g); g.connect(ac.destination); s.start(z + Math.random()*0.02); }
 }
 
 // ---------- Atome zeichnen ----------
 const cvA = $("atome"), ctxA = cvA.getContext("2d");
-let W=0,H=0, spalten=1, zeilen=1, zelle=1, modus="kreis", pos=null, bild=null, bildCv=null, bildCtx=null, sprites={};
-const FARBE_TOT = [44,58,110], FARBE_LEB = [255,181,71], FARBE_BLITZ=[255,255,255];
+let W=0,H=0, spalten=1, zeilen=1, zelle=1, pos=null, sprites={};
+const STUFENFARBE = {stark:[255,90,110], mittel:[255,181,71], schwach:[91,227,164], keine:[125,134,179], bereit:[125,134,179]};
 function größe(){
   const r = cvA.getBoundingClientRect(), d = window.devicePixelRatio||1;
   W = Math.max(10, Math.round(r.width*d)); H = Math.max(10, Math.round(r.height*d));
   cvA.width = W; cvA.height = H;
 }
 function sprite(farbe, kern, glanz){
-  const s = Math.max(4, Math.ceil(zelle)), c = document.createElement("canvas"); c.width=c.height=s*2;
+  const s = Math.max(6, Math.ceil(zelle)), c = document.createElement("canvas"); c.width=c.height=s*2;
   const x = c.getContext("2d"), g = x.createRadialGradient(s,s,0,s,s,s);
-  g.addColorStop(0, kern); g.addColorStop(0.35, farbe); g.addColorStop(1, "rgba(0,0,0,0)");
+  g.addColorStop(0, kern); g.addColorStop(0.4, farbe); g.addColorStop(1, "rgba(0,0,0,0)");
   x.fillStyle = g; x.beginPath(); x.arc(s,s,s*glanz,0,7); x.fill(); return c;
 }
 function layoutAtome(){
   größe();
   spalten = Math.ceil(Math.sqrt(N0*W/H)); zeilen = Math.ceil(N0/spalten);
   zelle = Math.min(W/spalten, H/zeilen);
-  modus = N0 <= 3000 ? "kreis" : "pixel";
-  if(modus==="kreis"){
-    const ox=(W-spalten*zelle)/2, oy=(H-zeilen*zelle)/2;
-    pos = new Float32Array(N0*2);
-    for(let i=0;i<N0;i++){ const j = 0.18*zelle;
-      pos[2*i]   = ox + (i%spalten+0.5)*zelle + (Math.random()-.5)*j;
-      pos[2*i+1] = oy + (Math.floor(i/spalten)+0.5)*zelle + (Math.random()-.5)*j; }
-    sprites.leb = sprite("rgba(255,170,60,.95)","#fff4d6",0.95);
-    sprites.tot = sprite("rgba(70,90,160,.6)","#4c5f9e",0.55);
-    sprites.blitz = sprite("rgba(160,230,255,.95)","#ffffff",1);
-  } else {
-    bildCv = document.createElement("canvas"); bildCv.width = spalten; bildCv.height = zeilen;
-    bildCtx = bildCv.getContext("2d"); bild = bildCtx.createImageData(spalten, zeilen);
-    const d = bild.data; for(let i=0;i<spalten*zeilen;i++){ const k=4*i; if(i<N0){ d[k]=FARBE_LEB[0]; d[k+1]=FARBE_LEB[1]; d[k+2]=FARBE_LEB[2]; d[k+3]=255; } else d[k+3]=0; }
-  }
+  const ox=(W-spalten*zelle)/2, oy=(H-zeilen*zelle)/2;
+  pos = new Float32Array(N0*2);
+  for(let i=0;i<N0;i++){ const j = 0.16*zelle;
+    pos[2*i]   = ox + (i%spalten+0.5)*zelle + (Math.random()-.5)*j;
+    pos[2*i+1] = oy + (Math.floor(i/spalten)+0.5)*zelle + (Math.random()-.5)*j; }
+  sprites.leb = sprite("rgba(255,170,60,.95)","#fff4d6",0.9);
+  sprites.tot = sprite("rgba(70,90,160,.55)","#4c5f9e",0.5);
+  sprites.blitz = sprite("rgba(160,230,255,.95)","#ffffff",1);
 }
-function zeichneAtome(alles){
+function intensität(){ const A = laeuft||fertig ? (aktMess ?? lam*N0) : lam*N0; return Math.max(0, Math.min(1, Math.log10(Math.max(1,A))/Math.log10(3500))); }
+function zeichneAtome(){
   const jetzt = performance.now();
   ctxA.clearRect(0,0,W,H);
-  if(modus==="kreis"){
-    const s = zelle*0.62;
-    for(let i=0;i<N0;i++){ const sp = lebend[i] ? sprites.leb : sprites.tot; ctxA.drawImage(sp, pos[2*i]-s, pos[2*i+1]-s, 2*s, 2*s); }
-    blitze = blitze.filter(([i,t0])=>{ const a = (jetzt-t0)/350; if(a>=1) return false;
-      ctxA.globalAlpha = 1-a; const g = s*(1.2+a*1.6); ctxA.drawImage(sprites.blitz, pos[2*i]-g, pos[2*i+1]-g, 2*g, 2*g); ctxA.globalAlpha = 1; return true; });
-  } else {
-    const d = bild.data;
-    // neue Zerfälle hell aufblitzen lassen, ältere abdunkeln
-    blitze = blitze.filter(([i,t0])=>{ const k=4*i, alt = jetzt-t0 > 220; const f = alt ? FARBE_TOT : FARBE_BLITZ; d[k]=f[0]; d[k+1]=f[1]; d[k+2]=f[2]; return !alt; });
-    bildCtx.putImageData(bild,0,0);
-    ctxA.imageSmoothingEnabled = false;
-    const bw = spalten*zelle, bh = zeilen*zelle;
-    ctxA.drawImage(bildCv, (W-bw)/2, (H-bh)/2, bw, bh);
+  // Leuchten im Hintergrund: Farbe nach Stufe, Helligkeit nach Aktivität
+  if(laeuft || fertig){
+    const [r,g,b] = STUFENFARBE[stufe] || STUFENFARBE.bereit, i = intensität();
+    const puls = stufe==="stark" ? 0.75 + 0.25*Math.sin(jetzt/1000*2*Math.PI/parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--puls"))) : 1;
+    const gr = ctxA.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.65);
+    gr.addColorStop(0, `rgba(${r},${g},${b},${0.32*i*i*puls})`); gr.addColorStop(1, "rgba(0,0,0,0)");
+    ctxA.fillStyle = gr; ctxA.fillRect(0,0,W,H);
   }
+  const s = zelle*0.55;
+  for(let i=0;i<N0;i++){ const sp = lebend[i] ? sprites.leb : sprites.tot; ctxA.drawImage(sp, pos[2*i]-s, pos[2*i+1]-s, 2*s, 2*s); }
+  if(blitze.length > 2500) blitze.splice(0, blitze.length-2500);
+  ctxA.lineCap = "round";
+  blitze = blitze.filter(([i,t0,w])=>{ const a = (jetzt-t0)/450; if(a>=1) return false;
+    const x = pos[2*i], y = pos[2*i+1];
+    ctxA.globalAlpha = 1-a; const g = s*(1.1+a*1.8); ctxA.drawImage(sprites.blitz, x-g, y-g, 2*g, 2*g);
+    // Strahl: kurzer Strich, der vom Kern wegfliegt
+    const r1 = zelle*(0.6 + a*5), r2 = r1 + zelle*1.6;
+    ctxA.strokeStyle = "rgba(170,235,255,.9)"; ctxA.lineWidth = Math.max(1, zelle*0.14);
+    ctxA.beginPath(); ctxA.moveTo(x+Math.cos(w)*r1, y+Math.sin(w)*r1); ctxA.lineTo(x+Math.cos(w)*r2, y+Math.sin(w)*r2); ctxA.stroke();
+    ctxA.globalAlpha = 1; return true; });
 }
-new ResizeObserver(()=>{ if(!lebend) return; const alt=modus; größe();
-  spalten = Math.ceil(Math.sqrt(N0*W/H)); zeilen = Math.ceil(N0/spalten); zelle=Math.min(W/spalten,H/zeilen);
-  if(alt==="kreis"){ const merk = lebend; layoutAtome(); lebend = merk; } else { zelle=Math.min(W/spalten,H/zeilen); }
-  zeichneAtome(true); zeichneGraph(); }).observe($("bühne"));
+new ResizeObserver(()=>{ if(!lebend) return; const merk = lebend; layoutAtome(); lebend = merk; zeichneAtome(); zeichneGraph(); zeichneAkt(); }).observe($("bühne"));
 
-// ---------- Graph ----------
+// ---------- Strahlermeter ----------
+const STUFENTEXT = {stark:"starker Strahler", mittel:"mittlerer Strahler", schwach:"schwacher Strahler", keine:"keine Strahlung mehr", bereit:"bereit"};
+const STUFENCSS = {stark:"#ff5a6e", mittel:"#ffb547", schwach:"#5be3a4", keine:"#7d86b3", bereit:"#7d86b3"};
+function stufeZeigen(s){
+  const anzeige = (laeuft||fertig) ? s : "bereit";
+  document.documentElement.style.setProperty("--stufe", STUFENCSS[anzeige]);
+  const A = (laeuft||fertig) ? (aktMess ?? lam*N0) : lam*N0;
+  // Pulstempo: je stärker, desto schneller
+  document.documentElement.style.setProperty("--puls", (2.2 - 1.7*intensität()).toFixed(2)+"s");
+  ["stark","mittel","schwach"].forEach(k=>{ $("bühne").classList.toggle(k, anzeige===k); $("meter").classList.toggle(k, anzeige===k); });
+  $("mStufe").textContent = STUFENTEXT[anzeige];
+  $("schild").textContent = anzeige==="bereit" ? "bereit · Start mit „Los“" : "☢ " + STUFENTEXT[anzeige];
+  $("mBq").textContent = (laeuft||fertig) ? fmt(Math.round(aktMess ?? lam*N0)) : "—";
+  // Skala logarithmisch: 1 Bq … 3 500 Bq, Grenzen bei 40 und 175 Bq
+  const anteil = A<=0 ? 0 : Math.max(0, Math.min(1, Math.log10(Math.max(1,A))/Math.log10(3500)));
+  const f = $("mFüll"); f.style.width = (anteil*100).toFixed(1)+"%"; f.style.backgroundSize = (anteil>0 ? 100/anteil : 100)+"% 100%";
+  $("mTheo").innerHTML = `${fmt(lam,3)} 1/s · ${fmt(anzahl)} = <em>${fmt(lam*anzahl, lam*anzahl<10?1:0)} Bq</em>`;
+}
+// Grenzen auf der Log-Skala: 40 Bq → 45 %, 175 Bq → 63 % (Verlauf der Leiste passend dazu)
+(function(){ const p40 = Math.log10(40)/Math.log10(3500)*100, p175 = Math.log10(175)/Math.log10(3500)*100;
+  const verlauf = `linear-gradient(90deg,#1d6b52 0%,#5be3a4 ${p40}%,#ffb547 ${p40}%,#ff8a3d ${p175}%,#ff5a6e ${p175}%,#ff2d55 100%)`;
+  document.querySelector(".skala .leiste").style.background = verlauf; $("mFüll").style.backgroundImage = verlauf;
+  const m = document.querySelector(".skala .marken"); m.style.display="grid"; m.style.gridTemplateColumns = `${p40}% ${p175-p40}% 1fr`; m.style.textAlign="center"; })();
+
+// ---------- Graph N ----------
 const cvG = $("graph"), ctxG = cvG.getContext("2d");
-function zeichneGraph(){
-  const r = cvG.getBoundingClientRect(), d = window.devicePixelRatio||1;
+function vorbereiten(cv, ctx){
+  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio||1;
   const GW = Math.round(r.width*d), GH = Math.round(r.height*d);
-  if(cvG.width!==GW || cvG.height!==GH){ cvG.width=GW; cvG.height=GH; }
-  const c = ctxG; c.clearRect(0,0,GW,GH);
+  if(cv.width!==GW || cv.height!==GH){ cv.width=GW; cv.height=GH; }
+  ctx.clearRect(0,0,GW,GH); ctx.font = `${12*d}px -apple-system,Segoe UI,Roboto,sans-serif`; ctx.textBaseline="middle";
+  return [GW,GH,d];
+}
+function zeichneGraph(){
+  const c = ctxG, [GW,GH,d] = vorbereiten(cvG, c);
   const L = 62*d, R = 46*d, O = 16*d, U = 40*d, bw = GW-L-R, bh = GH-O-U, tMax = TMAXFAKTOR*T;
   const px = tt => L + tt/tMax*bw, py = n => O + bh - n/N0*bh;
-  c.font = `${12*d}px -apple-system,Segoe UI,Roboto,sans-serif`; c.textBaseline="middle";
-  // Hilfslinien
   for(let k=0;k<=TMAXFAKTOR;k++){ const x=px(k*T); c.strokeStyle = k? "rgba(255,255,255,.12)":"rgba(255,255,255,.3)"; c.lineWidth=d; c.setLineDash(k?[3*d,4*d]:[]); c.beginPath(); c.moveTo(x,O); c.lineTo(x,O+bh); c.stroke();
     c.setLineDash([]); c.fillStyle="#a9b1d6"; c.textAlign="center"; c.fillText(k===0?"0":(k===1?"T½":k+"T½"), x, O+bh+13*d);
-    c.fillStyle="#6f78a6"; c.fillText(fmt(k*T,1)+" s", x, O+bh+28*d); }
+    c.fillStyle="#6f78a6"; c.fillText(fmt(k*T,k*T<10?1:0)+" s", x, O+bh+28*d); }
   [1,0.5,0.25,0.125,0].forEach(f=>{ const y=py(f*N0); c.strokeStyle="rgba(255,255,255,.1)"; c.beginPath(); c.moveTo(L,y); c.lineTo(L+bw,y); c.stroke();
     c.fillStyle="#a9b1d6"; c.textAlign="right"; c.fillText(fmt(f*N0), L-8*d, y); c.textAlign="left"; c.fillStyle="#6f78a6"; c.fillText(fmt(f*100, f===0.125?1:0)+" %", L+bw+6*d, y); });
-  // Theorie
   c.strokeStyle="#4fd1ff"; c.lineWidth=2.5*d; c.setLineDash([7*d,5*d]); c.beginPath();
   for(let i=0;i<=300;i++){ const tt=i/300*tMax, n=N0*Math.exp(-lam*tt); i?c.lineTo(px(tt),py(n)):c.moveTo(px(tt),py(n)); } c.stroke(); c.setLineDash([]);
-  // Messung
   if(verlauf.length>1){
     c.shadowColor="rgba(255,181,71,.7)"; c.shadowBlur=10*d; c.strokeStyle="#ffb547"; c.lineWidth=3*d; c.beginPath();
-    const schritt = Math.max(1, Math.floor(verlauf.length/1500));
-    for(let i=0;i<verlauf.length;i+=schritt){ const [tt,n]=verlauf[i]; i?c.lineTo(px(tt),py(n)):c.moveTo(px(tt),py(n)); }
+    const sp = Math.max(1, Math.floor(verlauf.length/1500));
+    for(let i=0;i<verlauf.length;i+=sp){ const [tt,n]=verlauf[i]; i?c.lineTo(px(tt),py(n)):c.moveTo(px(tt),py(n)); }
     const [tl,nl] = verlauf[verlauf.length-1]; c.lineTo(px(tl),py(nl)); c.stroke(); c.shadowBlur=0;
     c.fillStyle="#fff"; c.beginPath(); c.arc(px(tl),py(nl),4.5*d,0,7); c.fill();
   }
-  // 1-s-Marke
-  if(1 <= tMax){ const x=px(1); c.strokeStyle="rgba(157,123,255,.7)"; c.lineWidth=1.5*d; c.beginPath(); c.moveTo(x,O); c.lineTo(x,O+bh); c.stroke();
-    c.fillStyle="#cdb8ff"; c.textAlign="left"; c.fillText("1 s", x+5*d, O+10*d); }
-  // Achsen
+  c.strokeStyle="rgba(255,255,255,.5)"; c.lineWidth=1.5*d; c.beginPath(); c.moveTo(L,O); c.lineTo(L,O+bh); c.lineTo(L+bw,O+bh); c.stroke();
+}
+
+// ---------- Graph Aktivität ----------
+const cvK = $("aktgraph"), ctxK = cvK.getContext("2d");
+const GEISTFARBEN = ["rgba(205,184,255,.85)","rgba(120,220,255,.75)","rgba(255,214,140,.75)"];
+function geistMerken(){
+  if(aktVerlauf.length < 3) return;
+  geister.unshift({pts: aktVerlauf.slice(), text: `${fmt(N0)} Atome · T½ ${fmt(T,1)} s`});
+  geister = geister.slice(0,3);
+}
+$("geistLeeren").onclick = ()=>{ geister = []; zeichneAkt(); };
+function zeichneAkt(){
+  const c = ctxK, [GW,GH,d] = vorbereiten(cvK, c);
+  const L = 54*d, R = 76*d, O = 14*d, U = 34*d, bw = GW-L-R, bh = GH-O-U;
+  const px = tt => L + Math.min(tt,AX)/AX*bw, py = a => O + bh - Math.min(a,AY)/AY*bh;
+  // Bereiche stark / mittel / schwach
+  [[AY,STARK,"rgba(255,90,110,.13)","#ff8fa0","stark"],[STARK,SCHWACH,"rgba(255,181,71,.10)","#ffcf7a","mittel"],[SCHWACH,0,"rgba(91,227,164,.10)","#8ff0c3","schwach"]].forEach(([o,u,f,tf,txt])=>{
+    c.fillStyle=f; c.fillRect(L,py(o),bw,py(u)-py(o)); c.fillStyle=tf; c.textAlign="left"; c.font=`700 ${12*d}px -apple-system,Segoe UI,Roboto,sans-serif`;
+    c.fillText(txt, L+bw+8*d, (py(o)+py(u))/2); });
+  c.font = `${12*d}px -apple-system,Segoe UI,Roboto,sans-serif`;
+  for(let s=0;s<=AX;s+=10){ const x=px(s); c.strokeStyle="rgba(255,255,255,.08)"; c.lineWidth=d; c.beginPath(); c.moveTo(x,O); c.lineTo(x,O+bh); c.stroke();
+    c.fillStyle="#a9b1d6"; c.textAlign="center"; c.fillText(s+" s", x, O+bh+14*d); }
+  [0,SCHWACH,100,STARK,300,AY].forEach(a=>{ const y=py(a); c.strokeStyle= (a===STARK||a===SCHWACH) ? "rgba(255,255,255,.3)" : "rgba(255,255,255,.08)"; c.setLineDash(a===STARK||a===SCHWACH?[5*d,4*d]:[]);
+    c.beginPath(); c.moveTo(L,y); c.lineTo(L+bw,y); c.stroke(); c.setLineDash([]); c.fillStyle="#a9b1d6"; c.textAlign="right"; c.fillText(a+(a===AY?"+":""), L-8*d, y); });
+  c.save(); c.translate(14*d, O+bh/2); c.rotate(-Math.PI/2); c.textAlign="center"; c.fillStyle="#6f78a6"; c.fillText("Bq", 0, 0); c.restore();
+  const linie = (pts, farbe, breite)=>{ c.strokeStyle=farbe; c.lineWidth=breite; c.beginPath(); let erst=true;
+    for(const [tt,a] of pts){ if(tt>AX) break; erst ? c.moveTo(px(tt),py(a)) : c.lineTo(px(tt),py(a)); erst=false; } c.stroke(); };
+  geister.forEach((g,i)=>{ linie(g.pts, GEISTFARBEN[i], 2*d); const p = g.pts[0]; c.fillStyle=GEISTFARBEN[i]; c.textAlign="left";
+    c.fillText(g.text, px(p[0])+6*d, Math.max(O+8*d, py(p[1]) - 10*d + i*14*d)); });
+  // berechnet für die aktuellen Einstellungen
+  c.strokeStyle="#ff8fa0"; c.lineWidth=2*d; c.setLineDash([7*d,5*d]); c.beginPath();
+  for(let i=0;i<=300;i++){ const tt=i/300*Math.min(AX,TMAXFAKTOR*T), a=lam*N0*Math.exp(-lam*tt); i?c.lineTo(px(tt),py(a)):c.moveTo(px(tt),py(a)); } c.stroke(); c.setLineDash([]);
+  if(aktVerlauf.length>1){
+    c.shadowColor="rgba(255,90,110,.7)"; c.shadowBlur=10*d; linie(aktVerlauf, "#ff5a6e", 3*d); c.shadowBlur=0; }
   c.strokeStyle="rgba(255,255,255,.5)"; c.lineWidth=1.5*d; c.beginPath(); c.moveTo(L,O); c.lineTo(L,O+bh); c.lineTo(L+bw,O+bh); c.stroke();
 }
 
@@ -401,73 +573,78 @@ function zeichneGraph(){
 function anzeigen(){
   const erwartet = N0*Math.exp(-lam*t);
   $("oDa").textContent = fmt(anzahl);
-  $("oZeit").textContent = fmt(t,2)+" s";
+  $("oZeit").textContent = fmt(t,1)+" s";
   if(t===0) $("oKlick").textContent = "Klick 0";
   $("wMess").textContent = fmt(anzahl);
   $("wRech").textContent = fmt(erwartet, erwartet<100?1:0);
   $("wAbw").textContent = t===0 ? "—" : (erwartet>0 ? ((anzahl>=erwartet?"+":"−")+fmt(Math.abs(anzahl-erwartet)/N0*100,1)+" %") : "—");
-  $("wEins").textContent = anteilEins===null ? (t===0?"—":"läuft …") : fmt(anteilEins*100,1)+" %";
+  $("wHalb").textContent = tHaelfte===null ? (t===0?"—":"läuft …") : fmt(tHaelfte,1)+" s";
+  $("fAkt").innerHTML = `A = λ · N = ${fmt(lam,3)} 1/s · ${fmt(anzahl)} = <em>${fmt(lam*anzahl, lam*anzahl<10?1:0)} Bq</em>`;
 }
 
 // ---------- Protokoll ----------
-let protokoll = []; try{ protokoll = JSON.parse(localStorage.getItem("zerfallslabor-protokoll")||"[]"); }catch(e){}
+const PKEY = "zerfallslabor-protokoll-v2";
+let protokoll = []; try{ protokoll = JSON.parse(localStorage.getItem(PKEY)||"[]"); }catch(e){}
 function protokollieren(){
-  protokoll.push({n:N0, T, lam, eins: anteilEins, einsR: 1-Math.exp(-lam), h: tHaelfte});
-  try{ localStorage.setItem("zerfallslabor-protokoll", JSON.stringify(protokoll)); }catch(e){}
+  protokoll.push({n:N0, T, lam, a0: lam*N0, stark: warStark ? (tStarkBis ?? -1) : null, schwach: tSchwachAb, h: tHaelfte});
+  try{ localStorage.setItem(PKEY, JSON.stringify(protokoll)); }catch(e){}
   protokollZeigen();
 }
 function protokollZeigen(){
   const tb = $("protokoll");
-  if(!protokoll.length){ tb.innerHTML = '<tr><td colspan="7" class="leer">Noch kein Durchlauf. Drücke oben auf „Los“ und warte, bis der Lauf zu Ende ist.</td></tr>'; return; }
-  tb.innerHTML = protokoll.map((p,i)=>`<tr><td>${i+1}</td><td>${fmt(p.n)}</td><td>${fmt(p.T,1)} s</td><td>${fmt(p.lam,2)} 1/s</td>
-    <td class="a">${p.eins===null?"—":fmt(p.eins*100,1)+" %"}</td><td class="c">${fmt(p.einsR*100,1)} %</td>
-    <td>${p.h===null?"—":fmt(p.h,2)+" s"} <span style="color:#6f78a6">(T½ = ${fmt(p.T,1)} s)</span></td></tr>`).reverse().join("");
+  if(!protokoll.length){ tb.innerHTML = '<tr><td colspan="8" class="leer">Noch kein Durchlauf. Drücke oben auf „Los“ und warte, bis der Lauf zu Ende ist.</td></tr>'; return; }
+  tb.innerHTML = protokoll.map((p,i)=>`<tr><td>${i+1}</td><td>${fmt(p.n)}</td><td>${fmt(p.T,1)} s</td><td>${fmt(p.lam,3)} 1/s</td>
+    <td class="c">${fmt(p.a0)} Bq</td>
+    <td class="r">${p.stark===null?"nie stark":(p.stark<0?"bis zum Ende":fmt(p.stark,1)+" s")}</td>
+    <td class="g">${p.schwach===null?"—":(p.schwach===0?"von Anfang an":fmt(p.schwach,1)+" s")}</td>
+    <td>${p.h===null?"—":fmt(p.h,1)+" s"}</td></tr>`).reverse().join("");
 }
-$("protLeeren").onclick = ()=>{ if(!confirm("Protokoll wirklich leeren?")) return; protokoll=[]; try{localStorage.removeItem("zerfallslabor-protokoll");}catch(e){} protokollZeigen(); };
+$("protLeeren").onclick = ()=>{ if(!confirm("Protokoll wirklich leeren?")) return; protokoll=[]; try{localStorage.removeItem(PKEY);}catch(e){} protokollZeigen(); };
 
 // ---------- Forscheraufträge ----------
 const AUFTRAEGE = [
-  {f:"", t:"Zufall bei wenigen Atomen", e:[50,1], s:"50 Atome · T½ = 1 s",
-   a:["Starte drei Läufe nacheinander mit denselben Einstellungen.","Vergleiche die gelbe Messkurve mit der blauen Kurve.","Schau im Protokoll: Nach wie vielen Sekunden war jeweils die Hälfte zerfallen?"],
-   q:"Was fällt dir auf? Warum ist jeder Lauf anders?",
-   l:"Die Messkurve springt in Stufen und weicht deutlich von der e-Funktion ab; der Zeitpunkt der Hälfte schwankt um 1 s. Jeder Kern zerfällt zufällig."},
-  {f:"", t:"Je mehr Atome, desto …", e:[250000,1], s:"T½ = 1 s · 500, 5 000, 50 000, 250 000 Atome",
-   a:["Lass je einen Lauf mit 500, 5 000, 50 000 und 250 000 Atomen laufen.","Achte auf die Abweichung unter dem Graphen."],
+  {f:"", t:"Wie bei den Würfeln", e:[[500,2]], s:"500 Atome · T½ = 2 s",
+   a:["Starte den Lauf. Lies am Strahlermeter ab, wie viele Atome am Anfang pro Sekunde zerfallen (Bq).","Lies den Wert nach dem 3. Klick noch einmal ab.","Wie lange dauert es, bis fast alle Atome zerfallen sind?"],
+   q:"Vergleiche mit eurem Würfelversuch: Was ist gleich?",
+   l:"Am Anfang zerfallen etwa 170 Atome pro Sekunde, nach 3 T½ nur noch etwa 20 — ein Achtel. Die letzten Atome brauchen sehr lange, wie die letzten Würfel. Je weniger Kerne noch da sind, desto weniger zerfallen pro Sekunde."},
+  {f:"", t:"Zufall bei wenigen Atomen", e:[[50,2]], s:"50 Atome · T½ = 2 s",
+   a:["Starte drei Läufe nacheinander mit denselben Einstellungen.","Vergleiche die gelbe Messkurve mit der blauen Kurve.","Schau ins Protokoll: Nach wie vielen Sekunden war jeweils die Hälfte zerfallen?"],
+   q:"Warum ist jeder Lauf anders? Kannst du sagen, welches Atom als nächstes zerfällt?",
+   l:"Die Messkurve springt in Stufen und weicht deutlich von der berechneten Kurve ab. Die Hälfte ist mal nach 1,5 s, mal nach 2,5 s erreicht. Welches Atom als nächstes zerfällt, kann niemand sagen. Ein Atom „altert“ nicht."},
+  {f:"", t:"Je mehr Atome, desto …", e:[[50,2],[500,2],[5000,2]], s:"T½ = 2 s · 50, 500 und 5 000 Atome",
+   a:["Lass je einen Lauf mit 50, 500 und 5 000 Atomen laufen.","Achte auf die Abweichung unter dem Graphen."],
    q:"Formuliere eine Je-desto-Regel für die Schwankungen.",
-   l:"Je mehr Atome, desto genauer liegt die Messung auf N₀·e^(−λt). Bei 250 000 Atomen ist die Abweichung meist unter 0,5 %."},
-  {f:"c", t:"Kurze oder lange Halbwertszeit?", e:[50000,2], s:"50 000 Atome · T½ = 2 s, 1 s, 0,5 s, 0,2 s, 0,1 s",
-   a:["Lass für jede der fünf Halbwertszeiten einen Lauf laufen.","Lies jeweils ab: Wie viel Prozent sind nach 1 s zerfallen? (Feld „zerfallen nach 1 s“ und Protokoll)"],
-   q:"Je kürzer die Halbwertszeit, desto … Ergänze und begründe.",
-   l:"2 s → 29 %, 1 s → 50 %, 0,5 s → 75 %, 0,2 s → 97 %, 0,1 s → 99,9 %. Je kürzer T½, desto größer der Anteil, der in 1 s zerfällt."},
-  {f:"c", t:"Was verrät λ?", e:[5000,1], s:"beliebig · Regler T½ bewegen",
-   a:["Bewege den Regler für T½ langsam und beobachte λ in der Anzeige.","Halbiere T½ von 1 s auf 0,5 s. Was passiert mit λ?","Überprüfe eine Anzeige mit dem Taschenrechner: λ = 0,693 / T½."],
-   q:"Wie hängen λ und T½ zusammen? Was bedeutet ein großes λ für den Zerfall?",
-   l:"λ = ln 2 / T½: halbe Halbwertszeit → doppeltes λ. Großes λ heißt: Die Kerne zerfallen schnell, die Kurve fällt steil ab."},
-  {f:"", t:"Hör hin: immer die Hälfte", e:[250000,2], s:"250 000 Atome · T½ = 2 s · Ton an",
-   a:["Starte einen Lauf und höre auf die Klicks.","Lies nach dem 1., 2. und 3. Klick ab, wie viel Prozent noch da sind (rechte Achse)."],
+   l:"Je mehr Atome, desto glatter die Messkurve und desto genauer liegt sie auf N₀·e^(−λt). Bei 5 000 Atomen ist die Abweichung meist unter 1 %."},
+  {f:"c", t:"Was verrät λ?", e:[[2000,2]], s:"2 000 Atome · Regler T½ bewegen",
+   a:["Bewege den Regler für T½ langsam und beobachte λ in der Anzeige.","Halbiere T½ von 2 s auf 1 s. Was passiert mit λ?","Überprüfe eine Anzeige mit dem Taschenrechner: λ = 0,693 / T½."],
+   q:"Wie hängen λ und T½ zusammen? Was bedeutet ein großes λ?",
+   l:"λ = ln 2 / T½: halbe Halbwertszeit → doppeltes λ. Großes λ heißt: Jeder Kern zerfällt mit größerer Wahrscheinlichkeit pro Sekunde, die Kurve fällt steil ab."},
+  {f:"c", t:"Hör hin: immer die Hälfte", e:[[5000,5]], s:"5 000 Atome · T½ = 5 s · Ton an",
+   a:["Starte einen Lauf und höre auf die Klicks.","Lies nach dem 1., 2. und 3. Klick ab, wie viel Prozent noch da sind (rechte Achse).","Lies auch die Bq am Strahlermeter ab."],
    q:"Welches Muster erkennst du? Wie viel wäre nach dem 5. Klick noch da?",
-   l:"Nach jedem Klick (eine Halbwertszeit) ist wieder die Hälfte weg: 50 %, 25 %, 12,5 % … nach 5 T½ noch 3,1 %."},
-  {f:"v", t:"Rechnen statt messen", e:[250000,0.5], s:"250 000 Atome · T½ = 0,5 s",
-   a:["Berechne λ für T½ = 0,5 s.","Berechne mit N(t) = N₀ · e^(−λt) den Anteil, der nach t = 1 s noch da ist (e^x-Taste).","Starte den Lauf und vergleiche."],
-   q:"Deine Rechnung und dein Messwert:",
-   l:"λ = 1,386 1/s; e^(−1,386) = 0,25 → 25 % noch da, 75 % zerfallen. Passt zu genau zwei Halbwertszeiten in 1 s."},
-  {f:"v", t:"Und das einzelne Atom?", e:[50,2], s:"50 Atome · T½ = 2 s",
-   a:["Beobachte die Atome im linken Bild genau.","Kannst du vorhersagen, welches Atom als nächstes zerfällt?","Ein Atom hat schon 3 Halbwertszeiten überlebt. Zerfällt es jetzt eher?"],
-   q:"Was kann man über ein einzelnes Atom sagen — und was nur über viele?",
-   l:"Für ein einzelnes Atom ist der Zeitpunkt nicht vorhersagbar, und es „altert“ nicht: Seine Zerfallswahrscheinlichkeit bleibt immer gleich. Gesetzmäßig ist nur das Verhalten sehr vieler Atome."},
-  {f:"c", t:"Zusatz: Kohlenstoff-14", e:null, s:"ohne Simulation, mit Taschenrechner",
-   a:["C-14 hat die Halbwertszeit T½ = 5 730 Jahre.","Berechne λ in der Einheit 1/Jahr.","Welcher Anteil der C-14-Kerne zerfällt in einem Jahr?"],
-   q:"Rechnung und Ergebnis:",
-   l:"λ = 0,693 / 5 730 a ≈ 1,21 · 10⁻⁴ 1/a. In einem Jahr zerfallen etwa 0,012 % der Kerne."},
+   l:"Nach jedem Klick (eine Halbwertszeit) ist wieder die Hälfte weg: 50 %, 25 %, 12,5 % … nach 5 T½ noch 3,1 %. Auch die Zerfälle pro Sekunde halbieren sich mit jedem Klick: 690 → 350 → 170 → 90 Bq."},
+  {f:"r", t:"Zwei starke Strahler", e:[[5000,10,"A: 5 000 Atome · 10 s"],[500,1,"B: 500 Atome · 1 s"]], s:"A: 5 000 Atome · T½ = 10 s   B: 500 Atome · T½ = 1 s",
+   a:["Lass zuerst A laufen, danach B. Beide starten als starker Strahler.","Lies im Protokoll ab: Wie lange ist der Stoff ein starker Strahler? Ab wann ist er schwach?","Vergleiche die beiden Kurven im Graphen „Die Strahlung“."],
+   q:"Welcher Stoff bleibt länger ein starker Strahler? Woran liegt das?",
+   l:"Beide starten mit etwa 350 Bq. A (viele Atome, lange T½) bleibt etwa 10 s stark und ist erst nach etwa 31 s schwach. B (wenige Atome, kurze T½) ist schon nach etwa 1 s nur noch mittel und nach etwa 3 s schwach. Bei B nimmt die Strahlung zehnmal schneller ab."},
+  {f:"r", t:"Woher kommt die Stärke?", e:[[5000,10],[2500,5],[500,1]], s:"5 000 · 10 s   2 500 · 5 s   500 · 1 s",
+   a:["Rechne für jede Einstellung VOR dem Start A = λ · N₀ mit dem Taschenrechner aus.","Starte und vergleiche mit dem Strahlermeter.","Probiere selbst: Finde mit 300 Atomen eine Einstellung, die als starker Strahler startet."],
+   q:"Ergänze: Ein Stoff strahlt stark, wenn er entweder … oder … .",
+   l:"Alle drei starten mit etwa 350 Bq. Ein Stoff strahlt stark, wenn er entweder sehr viele radioaktive Kerne enthält oder Kerne mit kurzer Halbwertszeit (A = λ · N). Bei vielen Kernen mit langer Halbwertszeit nimmt die Strahlung nur langsam ab. Bei kurzer Halbwertszeit ist die starke Strahlung schnell vorbei. Mit 300 Atomen klappt es nur mit T½ = 1 s (≈ 210 Bq)."},
+  {f:"v", t:"Transfer: Medizin und Gestein", e:null, s:"ohne Simulation, mit Taschenrechner",
+   a:["Iod-131 (T½ = 8 Tage) wird in der Schilddrüsen-Therapie eingesetzt.","Uran-238 (T½ = 4,5 Milliarden Jahre) steckt in fast jedem Gestein.","Stell dir vor: Von beiden gibt es gleich viele Kerne."],
+   q:"Welcher Stoff strahlt stärker? Warum nimmt man in der Medizin Stoffe mit kurzer Halbwertszeit?",
+   l:"Iod-131 strahlt bei gleicher Kernzahl viel stärker (etwa 200 Milliarden Mal), weil λ viel größer ist. In der Medizin wirkt die Strahlung dadurch stark, ist aber nach wenigen Wochen fast vorbei. Uran-238 strahlt schwach, dafür Milliarden Jahre lang."},
 ];
-let antworten = {}; try{ antworten = JSON.parse(localStorage.getItem("zerfallslabor-antworten")||"{}"); }catch(e){}
-function merken(){ try{ localStorage.setItem("zerfallslabor-antworten", JSON.stringify(antworten)); }catch(e){} fortschritt(); }
+let antworten = {}; try{ antworten = JSON.parse(localStorage.getItem("zerfallslabor-antworten-v2")||"{}"); }catch(e){}
+function merken(){ try{ localStorage.setItem("zerfallslabor-antworten-v2", JSON.stringify(antworten)); }catch(e){} fortschritt(); }
 function fortschritt(){ const n = AUFTRAEGE.filter((_,i)=>antworten["f"+i]).length; $("fText").textContent = `${n} von ${AUFTRAEGE.length} erledigt`; $("fBalken").style.width = (n/AUFTRAEGE.length*100)+"%"; }
 AUFTRAEGE.forEach((a,i)=>{
   const k = document.createElement("div"); k.className = "karte " + a.f + (antworten["f"+i]?" erledigt":"");
+  const knöpfe = a.e ? `<div class="losreihe">${a.e.map(([n,tt,txt])=>`<button class="los" data-n="${n}" data-t="${tt}">↑ Einstellen${a.e.length>1?": "+(txt||fmt(n)+" Atome · "+fmt(tt,0)+" s"):""}</button>`).join("")}</div>` : "";
   k.innerHTML = `<div class="kopf"><span class="nr">${i+1}</span><h3>${a.t}</h3></div>
     <div class="einst">${a.s}</div><ol>${a.a.map(x=>`<li>${x}</li>`).join("")}</ol>
-    ${a.e?'<button class="los">↑ Einstellen</button>':""}
+    ${knöpfe}
     <b style="font-size:.95rem">${a.q}</b><textarea placeholder="Deine Beobachtung …"></textarea>
     <div class="loesung"><b>Erwartung:</b> ${a.l}</div>
     <label class="fertig"><input type="checkbox"> erledigt</label>`;
@@ -475,12 +652,15 @@ AUFTRAEGE.forEach((a,i)=>{
   ta.value = antworten["a"+i] || ""; cb.checked = !!antworten["f"+i];
   ta.addEventListener("input", ()=>{ antworten["a"+i]=ta.value; merken(); });
   cb.addEventListener("change", ()=>{ antworten["f"+i]=cb.checked; k.classList.toggle("erledigt", cb.checked); merken(); });
-  const b = k.querySelector(".los");
-  if(b) b.onclick = ()=>{ $("rN").value = reglerAusN(a.e[0]); $("rT").value = Math.round(a.e[1]*10); neu(); $("bühne").scrollIntoView({behavior:"smooth",block:"center"}); };
+  k.querySelectorAll(".los").forEach(b=> b.onclick = ()=>{ $("rN").value = reglerAusN(+b.dataset.n); $("rT").value = reglerAusT(+b.dataset.t); neu(); $("bühne").scrollIntoView({behavior:"smooth",block:"center"}); });
   $("karten").appendChild(k);
 });
 fortschritt();
-if(new URLSearchParams(location.search).has("loesungen")) document.body.classList.add("lehrkraft");
+if(new URLSearchParams(location.search).has("loesungen")){
+  document.body.classList.add("lehrkraft");
+  const m = $("merkL"); m.style.display="block";
+  m.innerHTML = `<h3>Merksatz (Lehrkraft)</h3><p>Ein Stoff strahlt stark, wenn er sehr viele radioaktive Kerne enthält oder Kerne mit kurzer Halbwertszeit. Bei vielen Kernen mit langer Halbwertszeit nimmt die Strahlung nur langsam ab. Bei kurzer Halbwertszeit wird aus dem starken Strahler schnell ein schwacher.</p>`;
+}
 
 protokollZeigen();
 neu();
